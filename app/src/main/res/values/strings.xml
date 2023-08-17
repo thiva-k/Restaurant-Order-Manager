@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Restaurant</string>
+    <string-array name="user_types_array">
+        <item>admin</item>
+        <item>chef</item>
+        <item>waiter</item>
+    </string-array>
+</resources>

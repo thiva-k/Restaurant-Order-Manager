@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <item name="registerButton" type="id" />
+    <item name="spinnerUserType" type="id" />
+    <item name="foodName" type="id" />
+    <item name="foodDescription" type="id" />
+    <item name="foodPrice" type="id" />
+</resources>

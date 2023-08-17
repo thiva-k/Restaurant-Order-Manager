@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "140954246691",
+    "project_id": "restaurant-mis",
+    "storage_bucket": "restaurant-mis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140954246691:android:eb788f92491b080ea05b96",
+        "android_client_info": {
+          "package_name": "com.example.hotel_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140954246691-q6lmbhh7t10tubgto11e49d5p88e9nt8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbQmbSF0iLslLz84FSIeigREKJQAVxNb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140954246691-q6lmbhh7t10tubgto11e49d5p88e9nt8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

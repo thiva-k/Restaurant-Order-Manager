@@ -2,8 +2,10 @@ package com.example.hotel_management;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class AddMenuItemActivity extends AppCompatActivity {
 
     private EditText nameEditText, descriptionEditText, priceEditText;
+    private  Spinner spinnerCategory;
     private Button addButton;
     private FirebaseFirestore db;
 
@@ -28,6 +31,11 @@ public class AddMenuItemActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.editTextDescription);
         priceEditText = findViewById(R.id.editTextPrice);
         addButton = findViewById(R.id.addButton);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(adapter);
 
         addButton.setOnClickListener(view -> addMenuItem());
     }
@@ -36,6 +44,7 @@ public class AddMenuItemActivity extends AppCompatActivity {
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         String priceStr = priceEditText.getText().toString();
+        String category = spinnerCategory.getSelectedItem().toString(); // Get the selected category from the spinner
 
         if (priceStr.isEmpty()) {
             Toast.makeText(this, "Price cannot be empty", Toast.LENGTH_SHORT).show();
@@ -50,11 +59,13 @@ public class AddMenuItemActivity extends AppCompatActivity {
             return;
         }
 
-        FoodItem foodItem = new FoodItem(name, description, price);
+        FoodItem foodItem = new FoodItem(name, description, price, "", category); // Empty initial documentId
 
         db.collection("foods")
                 .add(foodItem)
                 .addOnSuccessListener(documentReference -> {
+                    String documentId = documentReference.getId(); // Get the generated document ID
+                    foodItem.setDocumentId(documentId); // Set the documentId in the FoodItem
                     Toast.makeText(AddMenuItemActivity.this, "Item added successfully", Toast.LENGTH_SHORT).show();
                     clearFields();
                 })
@@ -62,6 +73,7 @@ public class AddMenuItemActivity extends AppCompatActivity {
                     Toast.makeText(AddMenuItemActivity.this, "Failed to add item", Toast.LENGTH_SHORT).show();
                 });
     }
+
 
 
     private void clearFields() {

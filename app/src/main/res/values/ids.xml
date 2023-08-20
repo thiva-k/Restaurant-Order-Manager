@@ -7,4 +7,9 @@
     <item name="foodName" type="id" />
     <item name="foodDescription" type="id" />
     <item name="foodPrice" type="id" />
+    <item name="spinnerCategory" type="id" />
+    <item name="editTextName" type="id" />
+    <item name="editTextDescription" type="id" />
+    <item name="editTextPrice" type="id" />
+    <item name="addButton" type="id" />
 </resources>

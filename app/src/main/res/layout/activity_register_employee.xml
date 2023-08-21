@@ -8,10 +8,18 @@
     android:padding="16dp">
 
     <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:inputType="text" />
+
+    <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
+        android:layout_marginTop="16dp"
         android:inputType="textEmailAddress" />
 
     <EditText

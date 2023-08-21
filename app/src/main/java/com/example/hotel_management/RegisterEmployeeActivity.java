@@ -15,11 +15,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class RegisterEmployeeActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText;
+    private EditText nameEditText, emailEditText, passwordEditText;
     private Spinner userTypeSpinner;
 
     @Override
@@ -27,6 +26,7 @@ public class RegisterEmployeeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_employee);
 
+        nameEditText = findViewById(R.id.editTextName); // Reference to the new EditText
         emailEditText = findViewById(R.id.editTextEmail);
         passwordEditText = findViewById(R.id.editTextPassword);
         userTypeSpinner = findViewById(R.id.spinnerUserType);
@@ -41,6 +41,7 @@ public class RegisterEmployeeActivity extends AppCompatActivity {
     }
 
     private void registerEmployee() {
+        String name = nameEditText.getText().toString(); // Retrieve name from EditText
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String selectedUserType = userTypeSpinner.getSelectedItem().toString();
@@ -51,7 +52,7 @@ public class RegisterEmployeeActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // User registration successful
                         String uid = task.getResult().getUser().getUid();
-                        addUserToFirestore(uid, selectedUserType); // Add user to Firestore with userType
+                        addUserToFirestore(uid, name, selectedUserType); // Add user to Firestore with name and userType
                         Toast.makeText(RegisterEmployeeActivity.this, "Employee registered successfully", Toast.LENGTH_SHORT).show();
                         finish(); // Finish the registration activity
                     } else {
@@ -61,21 +62,22 @@ public class RegisterEmployeeActivity extends AppCompatActivity {
                 });
     }
 
-    private void addUserToFirestore(String uid, String userType) {
+    private void addUserToFirestore(String uid, String name, String userType) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> user = new HashMap<>();
+        user.put("name", name); // Add the name attribute
         user.put("userType", userType);
 
         db.collection("users").document(uid)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("RegisterEmployeeActivity", "User successfully added to Firestore");
-                    Toast.makeText(RegisterEmployeeActivity.this, "Employee registered successfully to firestore", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterEmployeeActivity.this, "Employee registered successfully to Firestore", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     Log.w("RegisterEmployeeActivity", "Error adding user to Firestore", e);
-                    Toast.makeText(RegisterEmployeeActivity.this, "Employee NOT registered to firestore", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterEmployeeActivity.this, "Employee NOT registered to Firestore", Toast.LENGTH_SHORT).show();
                 });
     }
 }

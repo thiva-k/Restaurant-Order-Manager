@@ -26,7 +26,7 @@ public class RegisterEmployeeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_employee);
 
-        nameEditText = findViewById(R.id.editTextName); // Reference to the new EditText
+        nameEditText = findViewById(R.id.editTextName);
         emailEditText = findViewById(R.id.editTextEmail);
         passwordEditText = findViewById(R.id.editTextPassword);
         userTypeSpinner = findViewById(R.id.spinnerUserType);
@@ -41,33 +41,31 @@ public class RegisterEmployeeActivity extends AppCompatActivity {
     }
 
     private void registerEmployee() {
-        String name = nameEditText.getText().toString(); // Retrieve name from EditText
+        String name = nameEditText.getText().toString();
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String selectedUserType = userTypeSpinner.getSelectedItem().toString();
 
-        // Register the user in Firebase Authentication
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // User registration successful
                         String uid = task.getResult().getUser().getUid();
-                        addUserToFirestore(uid, name, selectedUserType); // Add user to Firestore with name and userType
+                        addUserToFirestore(uid, name, selectedUserType, email);
                         Toast.makeText(RegisterEmployeeActivity.this, "Employee registered successfully", Toast.LENGTH_SHORT).show();
-                        finish(); // Finish the registration activity
+                        finish();
                     } else {
-                        // User registration failed
                         Toast.makeText(RegisterEmployeeActivity.this, "Error registering employee", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void addUserToFirestore(String uid, String name, String userType) {
+    private void addUserToFirestore(String uid, String name, String userType, String email) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> user = new HashMap<>();
-        user.put("name", name); // Add the name attribute
+        user.put("name", name);
         user.put("userType", userType);
+        user.put("email", email); // Add the email attribute
 
         db.collection("users").document(uid)
                 .set(user)

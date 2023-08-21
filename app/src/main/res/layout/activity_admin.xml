@@ -20,17 +20,18 @@
 
 
     <Button
-        android:id="@+id/viewEmployeeButton"
+        android:id="@+id/viewEmployeesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:text="View Employees"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/registerUserButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.235" />
+        app:layout_constraintVertical_bias="0.992" />
+
     <Button
         android:id="@+id/registerUserButton"
         android:layout_width="wrap_content"

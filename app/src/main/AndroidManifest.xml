@@ -16,6 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hotel_management"
         tools:targetApi="31">
+        <activity android:name=".ViewEmployeesActivity"
+                  android:exported="false"/>
         <activity
             android:name=".AddMenuItemActivity"
             android:exported="false" />

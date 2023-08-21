@@ -12,4 +12,7 @@
     <item name="editTextDescription" type="id" />
     <item name="editTextPrice" type="id" />
     <item name="addButton" type="id" />
+    <item name="nameTextView" type="id" />
+    <item name="emailTextView" type="id" />
+    <item name="userTypeTextView" type="id" />
 </resources>

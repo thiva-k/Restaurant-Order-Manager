@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:text="Hi, Admin !"
+        android:text="Hi, Admin!"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         app:layout_constraintBottom_toTopOf="@+id/viewEmployeesButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,9 +21,9 @@
 
     <Button
         android:id="@+id/viewEmployeesButton"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="150dp"
         android:text="View Employees"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintEnd_toEndOf="parent"

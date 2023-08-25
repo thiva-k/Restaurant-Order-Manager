@@ -1,0 +1,11 @@
+<!-- res/layout/layout_logo.xml -->
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/logoImageView"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:src="@drawable/crown_logo"
+    android:layout_gravity="center_horizontal|bottom"
+    android:layout_marginBottom="16dp"
+    app:tint="@android:color/black" />

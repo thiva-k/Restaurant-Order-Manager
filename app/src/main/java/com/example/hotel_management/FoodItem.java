@@ -6,14 +6,14 @@ public class FoodItem {
     private String description;
     private Integer price;
     private String documentId;
-    private String category;
+    private String type;
 
-    public FoodItem(String name, String description, Integer price, String documentId, String category) {
+    public FoodItem(String name, String description, Integer price, String documentId, String type) {
         this.name = name;
         this.description = description;
         this.price=price;
         this.documentId = documentId;
-        this.category = category;
+        this.type = type;
     }
 
     public String getDocumentId() {
@@ -37,9 +37,9 @@ public class FoodItem {
     }
     //getters and setters for category
     public String getCategory() {
-        return category;
+        return type;
     }
     public void setCategory(String category) {
-        this.category = category;
+        this.type = category;
     }
 }

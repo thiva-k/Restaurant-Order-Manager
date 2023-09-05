@@ -44,7 +44,7 @@ public class AddMenuItemActivity extends AppCompatActivity {
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         String priceStr = priceEditText.getText().toString();
-        String category = spinnerCategory.getSelectedItem().toString(); // Get the selected category from the spinner
+        String type = spinnerCategory.getSelectedItem().toString(); // Get the selected category from the spinner
 
         if (priceStr.isEmpty()) {
             Toast.makeText(this, "Price cannot be empty", Toast.LENGTH_SHORT).show();
@@ -59,7 +59,7 @@ public class AddMenuItemActivity extends AppCompatActivity {
             return;
         }
 
-        FoodItem foodItem = new FoodItem(name, description, price, "", category); // Empty initial documentId
+        FoodItem foodItem = new FoodItem(name, description, price, "", type); // Empty initial documentId
 
         db.collection("foods")
                 .add(foodItem)

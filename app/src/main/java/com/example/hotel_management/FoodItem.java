@@ -5,6 +5,8 @@ public class FoodItem {
     private String name;
     private String description;
     private Integer price;
+
+
     private String documentId;
     private String type;
 
@@ -31,15 +33,28 @@ public class FoodItem {
     public Integer getPrice() {
         return price;
     }
+    public String getType() {
+        return type;
+    }
 
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
     //getters and setters for category
-    public String getCategory() {
-        return type;
+
+    public void setName(String name) {
+        this.name = name;
     }
-    public void setCategory(String category) {
-        this.type = category;
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

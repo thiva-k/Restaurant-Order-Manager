@@ -21,7 +21,7 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         addMenuItemButton.setOnClickListener(view -> {
-            Intent intent = new Intent(AdminActivity.this, AddMenuItemActivity.class);
+            Intent intent = new Intent(AdminActivity.this, EditMenuActivity.class);
             startActivity(intent);
         });
     }

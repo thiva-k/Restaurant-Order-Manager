@@ -47,9 +47,9 @@ public class MenuActivity extends AppCompatActivity {
         menuAdapter.setOnFoodItemListener((foodItem)->{
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View popUpView = getLayoutInflater().inflate(R.layout.pop_up_order_confirm, null);
-            TextView foodName = popUpView.findViewById(R.id.orderItemName);
-            TextView foodPrice = popUpView.findViewById(R.id.orderItemPrice);
-            Button confirmButton = popUpView.findViewById(R.id.orderConfirmButton);
+            TextView foodName = popUpView.findViewById(R.id.menuItemName);
+            TextView foodPrice = popUpView.findViewById(R.id.menuItemPrice);
+            Button confirmButton = popUpView.findViewById(R.id.addFoodConfirmButton);
             EditText quantity = popUpView.findViewById(R.id.orderQuantity);
             TextView totalPrice = popUpView.findViewById(R.id.orderTotalPrice);
             EditText tableNumber = popUpView.findViewById(R.id.tableNumber);
@@ -196,7 +196,6 @@ public class MenuActivity extends AppCompatActivity {
 
                                         // Replace the old item with the modified one
                                         foodItems.set(i, modifiedFoodItem);
-
                                         menuAdapter.notifyDataSetChanged();
                                         break;
                                     }

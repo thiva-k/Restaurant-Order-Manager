@@ -1,4 +1,4 @@
-package com.example.hotel_management;
+package com.example.hotel_management.datatypes;
 
 // FoodItem.java
 public class FoodItem {

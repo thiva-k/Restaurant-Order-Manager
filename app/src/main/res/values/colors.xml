@@ -7,6 +7,8 @@
     <color name="PrimaryAccent">#033C65</color>
     <color name="LightAccent">#076BB2</color>
     <color name="Ordered">#FFC107</color>
+    <color name="Preparing">#AAD37C</color>
+    <color name="Delivering">#65E438</color>
     <color name="Success">#009A3E</color>
     <color name="Failure">#D40000</color>
 </resources>

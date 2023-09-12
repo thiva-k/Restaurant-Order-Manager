@@ -3,15 +3,22 @@ package com.example.hotel_management;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hotel_management.datatypes.FoodItem;
+import com.example.hotel_management.datatypes.OrderItem;
+import com.example.hotel_management.recyledview.MenuAdapter;
+import com.example.hotel_management.recyledview.OrderListAdapter;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,22 +33,42 @@ import java.util.Map;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private RecyclerView foodRecyclerView;
     private MenuAdapter menuAdapter;
-    private List<FoodItem> foodItems;
+    private ArrayList<FoodItem> foodItems;
+    private RecyclerView orderRecyclerView;
+    private OrderListAdapter orderListAdapter;
+    private ArrayList<OrderItem> orderItems;
+    private Integer tableID;
+    private String status;
+    private String sessionID;
 
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        tableID = intent.getIntExtra("tableID", 0);
+        //fetch table data from firestore
+        db = FirebaseFirestore.getInstance();
+        db.collection("tables").document(tableID.toString()).get().addOnSuccessListener(documentSnapshot -> {
+            status = documentSnapshot.getString("status");
+            sessionID = documentSnapshot.getString("lastSessionID");
+        });
         setContentView(R.layout.activity_menu);
 
-        db = FirebaseFirestore.getInstance();
+        foodRecyclerView = findViewById(R.id.menuItems);
+        foodRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Order list
+        orderItems = new ArrayList<>();
+        orderListAdapter = new OrderListAdapter(orderItems);
+        orderRecyclerView = findViewById(R.id.orderList);
+        orderRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        orderRecyclerView.setAdapter(orderListAdapter);
 
+        //food menu
         foodItems = new ArrayList<>();
         menuAdapter = new MenuAdapter(foodItems);
         menuAdapter.setOnFoodItemListener((foodItem)->{
@@ -52,7 +79,6 @@ public class MenuActivity extends AppCompatActivity {
             Button confirmButton = popUpView.findViewById(R.id.addFoodConfirmButton);
             EditText quantity = popUpView.findViewById(R.id.orderQuantity);
             TextView totalPrice = popUpView.findViewById(R.id.orderTotalPrice);
-            EditText tableNumber = popUpView.findViewById(R.id.tableNumber);
             EditText notes = popUpView.findViewById(R.id.orderNotes);
             foodName.setText(foodItem.getName());
             foodPrice.setText(foodItem.getPrice().toString());
@@ -62,61 +88,58 @@ public class MenuActivity extends AppCompatActivity {
             confirmButton.setOnClickListener(v->{
                 Integer quantityValue = Integer.parseInt(quantity.getText().toString());
                 String note = notes.getText().toString();
-                Integer tableID = Integer.parseInt(tableNumber.getText().toString());
                 OrderItem orderItem = new OrderItem(foodItem.getName(), foodItem.getPrice(), quantityValue, tableID ,note);
-
                 //this callback is called when the order is added to the database. we are checking whether there is an ongoing session in the given table
                 //if that's the case, the order will be added to that session. otherwise a new session will be created
                 orderItem.setCallback((orderId -> {
-                    db.collection("sessions").whereEqualTo("checkOut",false).whereEqualTo("tableID",tableID).get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            if (querySnapshot.isEmpty()){
-                                Map<String,Object> data= new HashMap<>();
-                                data.put("checkOut",false);
-                                data.put("paid",false);
-                                data.put("tableID",tableID);
-                                data.put("orders", Arrays.asList(orderId));
-                                data.put("totalBill",orderItem.totalPrice);
-                                db.collection("sessions").add(data).addOnSuccessListener(documentReference -> {
-                                    orderItem.sessionID = documentReference.getId();
-                                    db.collection("orders").document(orderId).update("sessionID",orderItem.sessionID).addOnSuccessListener(documentReference1 -> {
-                                        Log.d("FirestoreData", "session id successfully updated in order!");
-                                    }).addOnFailureListener(e -> {
-                                        Log.d("FirestoreData", "Error updating order", e);
-                                    });
-                                    Log.d("FirestoreData", "New session created with ID: " + orderItem.sessionID);
-                                }).addOnFailureListener(e -> {
-                                    orderItem.sessionID = null;
-                                    Log.d("FirestoreData", "Error creating session", e);
-                                });
-                            }
-                            else{
-                                QuerySnapshot querySnapshot1 = task.getResult();
-                                String sessionID = querySnapshot1.getDocuments().get(0).getId();
-                                db.collection("sessions").document(sessionID).update("orders", FieldValue.arrayUnion(orderId)).addOnSuccessListener(documentReference -> {
-                                    orderItem.sessionID = sessionID;
-                                    db.collection("orders").document(orderId).update("sessionID",orderItem.sessionID).addOnSuccessListener(documentReference1 -> {
-                                        Log.d("FirestoreData", "session id successfully updated in order!");
-                                    }).addOnFailureListener(e -> {
-                                        Log.d("FirestoreData", "Error updating order", e);
-                                    });
-                                    Log.d("FirestoreData", "New session created with ID: " + orderItem.sessionID);
-                                }).addOnFailureListener(e -> {
-                                    orderItem.sessionID = null;
-                                    Log.d("FirestoreData", "Error creating session", e);
-                                });
-                            }
-                        }
-                    });
+                    if (status.equals("Available")){
+                        Map<String,Object> data= new HashMap<>();
+                        data.put("checkOut",false);
+                        data.put("paid",false);
+                        data.put("tableID",tableID);
+                        data.put("orders", Arrays.asList(orderId));
+                        data.put("totalBill",orderItem.totalPrice);
+                        db.collection("sessions").add(data).addOnSuccessListener(documentReference -> {
+                            orderItem.sessionID = documentReference.getId();
+                            db.collection("orders").document(orderId).update("sessionID",orderItem.sessionID).addOnSuccessListener(documentReference1 -> {
+                                orderItems.add(orderItem);
+                                orderListAdapter.notifyItemInserted(orderItems.size()-1);
+                            }).addOnFailureListener(e -> {
+                                Log.d("FirestoreData", "Error updating order", e);
+                            });
+                            Log.d("FirestoreData", "New session created with ID: " + orderItem.sessionID);
+                        }).addOnFailureListener(e -> {
+                            orderItem.sessionID = null;
+                            Log.d("FirestoreData", "Error creating session", e);
+                        });
+                    }
+                    else if(status.equals("Ongoing")){
+                        db.collection("sessions").document(sessionID).update("orders", FieldValue.arrayUnion(orderId)).addOnSuccessListener(documentReference -> {
+                            orderItem.sessionID = sessionID;
+                            db.collection("orders").document(orderId).update("sessionID",orderItem.sessionID).addOnSuccessListener(documentReference1 -> {
+                                orderItems.add(orderItem);
+                                orderListAdapter.notifyItemInserted(orderItems.size()-1);
+                            }).addOnFailureListener(e -> {
+                                Log.d("FirestoreData", "Error updating order", e);
+                            });
+                            Log.d("FirestoreData", "New session created with ID: " + orderItem.sessionID);
+                        }).addOnFailureListener(e -> {
+                            orderItem.sessionID = null;
+                            Log.d("FirestoreData", "Error creating session", e);
+                        });
+                    }
+                    else{
+                        Toast.makeText(this, "Table is booked at the moment", Toast.LENGTH_SHORT).show();
+                    }
                 }));
+                orderItem.firestoreUpload();
             dialog.dismiss();
             });
             dialog.show();
             }
             );
 
-        recyclerView.setAdapter(menuAdapter);
+        foodRecyclerView.setAdapter(menuAdapter);
 
         // Retrieve initial food items from Firestore
         db.collection("foods")
@@ -206,5 +229,6 @@ public class MenuActivity extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 }

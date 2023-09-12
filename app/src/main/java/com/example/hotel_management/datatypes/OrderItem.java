@@ -1,4 +1,4 @@
-package com.example.hotel_management;
+package com.example.hotel_management.datatypes;
 
 import android.util.Log;
 
@@ -33,7 +33,8 @@ public class OrderItem {
         this.notes = notes;
 
 
-        //upload to firestore
+    }
+    public void firestoreUpload() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
         data.put("name", this.name);

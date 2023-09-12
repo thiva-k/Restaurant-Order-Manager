@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
+            android:backgroundTint="@color/LightAccent"
             android:text="Login"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             app:rippleColor="#00FFFFFF" />

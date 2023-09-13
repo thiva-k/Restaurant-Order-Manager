@@ -1,24 +1,26 @@
 package com.example.hotel_management;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
-
+import java.util.Locale;
 
 public class AddOfferActivity extends AppCompatActivity {
 
@@ -26,7 +28,9 @@ public class AddOfferActivity extends AppCompatActivity {
     private EditText startDateEditText, endDateEditText, percentageEditText, descriptionEditText;
     private Button addOfferButton;
     private FirebaseFirestore db;
-    private FirebaseAuth auth;
+    private SimpleDateFormat dateFormatter;
+    private Calendar calendar;
+    private DatePickerDialog.OnDateSetListener startDatePicker, endDatePicker;
     private List<String> foodNamesList = new ArrayList<>();
 
     @Override
@@ -35,7 +39,8 @@ public class AddOfferActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_offer);
 
         db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
+        dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        calendar = Calendar.getInstance();
 
         foodNameSpinner = findViewById(R.id.foodNameSpinner);
         startDateEditText = findViewById(R.id.startDateEditText);
@@ -43,6 +48,10 @@ public class AddOfferActivity extends AppCompatActivity {
         percentageEditText = findViewById(R.id.percentageEditText);
         descriptionEditText = findViewById(R.id.descriptionEditText);
         addOfferButton = findViewById(R.id.addOfferButton);
+        foodNameSpinner.setPrompt("Select the item eligible for offer");
+
+        // Initialize date pickers
+        initializeDatePickers();
 
         // Call getFoodNames() to fetch food names from Firestore
         getFoodNames();
@@ -79,6 +88,53 @@ public class AddOfferActivity extends AppCompatActivity {
         ArrayAdapter<String> foodNameAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, foodNamesList);
         foodNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         foodNameSpinner.setAdapter(foodNameAdapter);
+    }
+
+    // Initialize date pickers
+    private void initializeDatePickers() {
+        // Start Date Picker
+        startDatePicker = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calendar.set(year, monthOfYear, dayOfMonth);
+                startDateEditText.setText(dateFormatter.format(calendar.getTime()));
+            }
+        };
+
+        startDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(
+                        AddOfferActivity.this,
+                        startDatePicker,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                ).show();
+            }
+        });
+
+        // End Date Picker
+        endDatePicker = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calendar.set(year, monthOfYear, dayOfMonth);
+                endDateEditText.setText(dateFormatter.format(calendar.getTime()));
+            }
+        };
+
+        endDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(
+                        AddOfferActivity.this,
+                        endDatePicker,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                ).show();
+            }
+        });
     }
 
     // Add the offer to the "offers" collection in Firestore

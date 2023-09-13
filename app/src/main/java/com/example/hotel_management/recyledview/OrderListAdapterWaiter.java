@@ -1,7 +1,6 @@
 package com.example.hotel_management.recyledview;
 
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,29 +14,33 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class OrderListAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<OrderListAdapter.OrderItemViewHolder>{
+public class OrderListAdapterWaiter extends androidx.recyclerview.widget.RecyclerView.Adapter<OrderListAdapterWaiter.OrderItemViewHolder>{
     public ArrayList<OrderItem> orderItems;
 
-    public OrderListAdapter(ArrayList<OrderItem> orderItems){
+    public OrderListAdapterWaiter(ArrayList<OrderItem> orderItems){
         this.orderItems = orderItems;
     }
+    public interface OnOrderButtonClickListener {
+        void OnOrderButtonClick(OrderItem orderItem);
+    }
+    private OnOrderButtonClickListener onOrderClickListener;
     @NonNull
     @Override
     public OrderItemViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
-        android.view.View view = android.view.LayoutInflater.from(parent.getContext()).inflate(R.layout.order_item, parent, false);
+        android.view.View view = android.view.LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order_waiter, parent, false);
         return new OrderItemViewHolder(view);
     }
     @Override
     public void onBindViewHolder(OrderItemViewHolder holder, int position) {
         OrderItem orderItem = orderItems.get(position);
         holder.foodName.setText(orderItem.name);
-        holder.foodPrice.setText(orderItem.price.toString());
         holder.quantity.setText(orderItem.quantity.toString());
-        holder.totalPrice.setText(orderItem.totalPrice.toString());
         String path ="https://i.ibb.co/m48NQyc/image-5.png";
         Picasso.get().load(path).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
         holder.status.setText(orderItem.status);
-        holder.status.setBackgroundColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.status)));
+        holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.status)));
+        holder.tableID.setText(orderItem.tableID.toString());
+        holder.orderButton.setOnClickListener(v -> onOrderClickListener.OnOrderButtonClick(orderItem));
 }
 
     @Override
@@ -46,34 +49,32 @@ public class OrderListAdapter extends androidx.recyclerview.widget.RecyclerView.
     }
     public static class OrderItemViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder{
         public TextView foodName;
-        public TextView foodPrice;
         public ImageView foodImage;
         public TextView quantity;
-        public TextView totalPrice;
-        public Button status;
+        public TextView status;
+        public TextView tableID;
+        public Button orderButton;
         public OrderItemViewHolder(android.view.View itemView) {
             super(itemView);
-            foodName = itemView.findViewById(R.id.foodName);
-            foodPrice = itemView.findViewById(R.id.foodPrice);
+            foodName = itemView.findViewById(R.id.orderFoodName);
             foodImage = itemView.findViewById(R.id.foodImage);
             quantity = itemView.findViewById(R.id.orderQuantity);
-            totalPrice = itemView.findViewById(R.id.totalPrice);
-            status = itemView.findViewById(R.id.orderStatus);
-            Log.d("hey", "OrderItemViewHolder: " + foodName.getText());
+            orderButton = itemView.findViewById(R.id.orderButton);
+            tableID = itemView.findViewById(R.id.orderTableNumber);
+            status = itemView.findViewById(R.id.status);
         }
+    }
+    public void setOnOrderButtonClickListener(OnOrderButtonClickListener onOrderClickListener){
+        this.onOrderClickListener = onOrderClickListener;
     }
     private int getColor(String status){
         switch (status){
-            case "Ordered":
-                return R.color.Ordered;
-            case "Preparing":
-                return R.color.Preparing;
             case "Prepared":
-                return R.color.Delivering;
-            case "Delivered":
                 return R.color.Success;
+            case "Delivering":
+                return R.color.Failure;
             default:
-                return R.color.Ordered;
+                return R.color.Success;
         }
     }
 }

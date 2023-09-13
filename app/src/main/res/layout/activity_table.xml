@@ -6,10 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".TableActivity">
 
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/topBar"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/PrimaryAccent"
+    android:backgroundTintMode="screen"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:showIn="@layout/activity_table">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/top_bar" />
+    <ImageView
+        android:id="@+id/topBarLogo"
+        android:layout_width="72dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/_logo" />
+
+    <TextView
+        android:id="@+id/topBarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Tables"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toEndOf="@+id/topBarLogo"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tableGrid"
@@ -19,5 +49,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+        app:layout_constraintTop_toBottomOf="@+id/topBar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,7 +60,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            foodName = itemView.findViewById(R.id.foodName);
+            foodName = itemView.findViewById(R.id.orderFoodName);
             foodDescription = itemView.findViewById(R.id.description);
             foodPrice= itemView.findViewById(R.id.foodPrice);
             foodImage = itemView.findViewById(R.id.foodImage);

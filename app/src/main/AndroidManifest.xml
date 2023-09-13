@@ -28,7 +28,7 @@
             android:name=".RegisterEmployeeActivity"
             android:exported="false" />
         <activity
-            android:name=".WaiterActivity"
+            android:name=".waiter.WaiterActivity"
             android:exported="false" />
         <activity
             android:name=".ChefActivity"

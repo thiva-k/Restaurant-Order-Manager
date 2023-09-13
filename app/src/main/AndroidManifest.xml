@@ -19,7 +19,10 @@
         <activity android:name=".ViewEmployeesActivity"
                   android:exported="false"/>
         <activity
-            android:name=".AddMenuItemActivity"
+            android:name=".TableActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditMenuActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterEmployeeActivity"

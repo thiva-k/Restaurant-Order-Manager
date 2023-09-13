@@ -1,19 +1,26 @@
-package com.example.hotel_management;
+package com.example.hotel_management.recyledview;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotel_management.FoodItem;
+import com.example.hotel_management.R;
+import com.example.hotel_management.datatypes.FoodItem;
 
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private List<FoodItem> foodItems;
+    private OnFoodItemListener onFoodItemListener;
+
+    public interface OnFoodItemListener {
+        void OnFoodItemClick(FoodItem foodItem);
+    }
 
     public MenuAdapter(List<FoodItem> foodItems) {
         this.foodItems = foodItems;
@@ -32,7 +39,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         holder.foodName.setText(foodItem.getName());
         holder.foodDescription.setText(foodItem.getDescription());
         holder.foodPrice.setText(String.valueOf(foodItem.getPrice()));
-
+        holder.foodImage.setImageResource(R.drawable._biriyani);
+        holder.itemView.setOnClickListener(v -> onFoodItemListener.OnFoodItemClick(foodItem));
     }
 
     @Override
@@ -40,16 +48,22 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         return foodItems.size();
     }
 
+    public void setOnFoodItemListener(OnFoodItemListener onFoodItemListener) {
+        this.onFoodItemListener = onFoodItemListener;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView foodName;
         TextView foodDescription;
         TextView foodPrice;
+        ImageView foodImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             foodName = itemView.findViewById(R.id.foodName);
-            foodDescription = itemView.findViewById(R.id.foodDescription);
+            foodDescription = itemView.findViewById(R.id.description);
             foodPrice= itemView.findViewById(R.id.foodPrice);
+            foodImage = itemView.findViewById(R.id.foodImage);
         }
     }
 }

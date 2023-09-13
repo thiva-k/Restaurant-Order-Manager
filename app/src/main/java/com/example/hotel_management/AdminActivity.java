@@ -15,6 +15,8 @@ public class AdminActivity extends AppCompatActivity {
         Button registerUserButton = findViewById(R.id.registerUserButton);
         Button addMenuItemButton = findViewById(R.id.addMenuItemButton);
         Button viewEmployeesButton = findViewById(R.id.viewEmployeesButton); // Add this line
+        Button addOfferButton = findViewById(R.id.addOfferButton); // Add this line
+        Button viewOffersButton = findViewById(R.id.viewOffersButton); // Add this line
 
         registerUserButton.setOnClickListener(view -> {
             Intent intent = new Intent(AdminActivity.this, RegisterEmployeeActivity.class);
@@ -28,6 +30,16 @@ public class AdminActivity extends AppCompatActivity {
 
         viewEmployeesButton.setOnClickListener(view -> { // Add this block
             Intent intent = new Intent(AdminActivity.this, ViewEmployeesActivity.class);
+            startActivity(intent);
+        });
+
+        addOfferButton.setOnClickListener(view -> { // Add this block
+            Intent intent = new Intent(AdminActivity.this, AddOfferActivity.class);
+            startActivity(intent);
+        });
+
+        viewOffersButton.setOnClickListener(view -> { // Add this block
+            Intent intent = new Intent(AdminActivity.this, ViewOfferActivity.class);
             startActivity(intent);
         });
     }

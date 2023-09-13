@@ -15,4 +15,9 @@
     <item name="nameTextView" type="id" />
     <item name="emailTextView" type="id" />
     <item name="userTypeTextView" type="id" />
+    <item name="offersRecyclerView" type="id" />
+    <item name="viewOfferLayout" type="id" />
+    <item name="offerDetailsTextView" type="id" />
+    <item name="editOfferButton" type="id" />
+    <item name="deleteOfferButton" type="id" />
 </resources>

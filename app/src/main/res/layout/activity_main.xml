@@ -60,7 +60,6 @@
         android:padding="16dp"
         android:text="LOGIN"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-
         app:cornerRadius="0dp"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,8 +1,16 @@
-package com.example.hotel_management;
+package com.example.hotel_management.admin;
 
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,12 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.FoodItem;
-import com.example.hotel_management.recyledview.MenuAdapter;
+import com.example.hotel_management.recyledview.MenuAdapterAdmin;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,28 +28,26 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class EditMenuActivity extends AppCompatActivity {
+public class MenuFragment extends Fragment {
 
     private ArrayList<FoodItem> foodItems;
-    private MenuAdapter menuAdapter;
     private RecyclerView menuRecyclerView;
+    private MenuAdapterAdmin menuAdapterAdmin;
     private FloatingActionButton addButton;
     private FirebaseFirestore db;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        db = FirebaseFirestore.getInstance();
-        setContentView(R.layout.activity_edit_menu);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view= inflater.inflate(R.layout.fragment_menu, container, false);
         foodItems = new ArrayList<>();
-        menuRecyclerView = findViewById(R.id.foodEditRecylerView);
-        menuAdapter = new MenuAdapter(foodItems);
-        addButton = findViewById(R.id.addFoodItemButton);
+        db= FirebaseFirestore.getInstance();
+        menuRecyclerView = view.findViewById(R.id.foodEditRecylerView);
+        menuAdapterAdmin = new MenuAdapterAdmin(foodItems);
+        addButton = view.findViewById(R.id.addOfferItemButton);
 
         //this lisnter is called when a food item is clicked on the menu. this will open a pop up window to edit the food item
-        menuAdapter.setOnFoodItemListener(foodItem -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(EditMenuActivity.this);
+        menuAdapterAdmin.setOnFoodItemListener(foodItem -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             View dialogView = getLayoutInflater().inflate(R.layout.pop_up_menu_edit, null);
             TextView topic = dialogView.findViewById(R.id.foodEditTopic);
             topic.setText("Edit Food Item");
@@ -55,7 +58,7 @@ public class EditMenuActivity extends AppCompatActivity {
             EditText foodPrice = dialogView.findViewById(R.id.addFoodPrice);
             foodPrice.setText(foodItem.getPrice().toString());
             Spinner foodCategory = dialogView.findViewById(R.id.foodTypeSpinner);
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                     R.array.category_options, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             foodCategory.setAdapter(adapter);
@@ -72,14 +75,14 @@ public class EditMenuActivity extends AppCompatActivity {
                         String priceStr = foodPrice.getText().toString();
                         String type = foodCategory.getSelectedItem().toString(); // Get the selected category from the spinner
                         if (priceStr.isEmpty()) {
-                            Toast.makeText(this, "Price cannot be empty", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Price cannot be empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         int price;
                         try {
                             price = Integer.parseInt(priceStr);
                         } catch (NumberFormatException e) {
-                            Toast.makeText(this, "Invalid price format", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Invalid price format", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -92,12 +95,12 @@ public class EditMenuActivity extends AppCompatActivity {
                                 .document(foodItem.getDocumentId())
                                 .set(foodItem)
                                 .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(EditMenuActivity.this, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Item updated successfully", Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(EditMenuActivity.this, "Failed to update item", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Failed to update item", Toast.LENGTH_SHORT).show();
                                 });
-                        menuAdapter.notifyDataSetChanged();
+                        menuAdapterAdmin.notifyDataSetChanged();
                         dialog.dismiss();
                     }
             );
@@ -107,12 +110,12 @@ public class EditMenuActivity extends AppCompatActivity {
                                 .document(foodItem.getDocumentId())
                                 .delete()
                                 .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(EditMenuActivity.this, "Item deleted successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Item deleted successfully", Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(EditMenuActivity.this, "Failed to delete item", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Failed to delete item", Toast.LENGTH_SHORT).show();
                                 });
-                        menuAdapter.notifyDataSetChanged();
+                        menuAdapterAdmin.notifyDataSetChanged();
                         dialog.dismiss();
                     }
             );
@@ -120,8 +123,8 @@ public class EditMenuActivity extends AppCompatActivity {
         });
 
         //this will open a pop up window to add a new food item
-        addButton.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(EditMenuActivity.this);
+        addButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             View dialogView = getLayoutInflater().inflate(R.layout.pop_up_menu_edit, null);
             TextView topic = dialogView.findViewById(R.id.foodEditTopic);
             topic.setText("Add New Food Item");
@@ -129,7 +132,7 @@ public class EditMenuActivity extends AppCompatActivity {
             EditText foodDescription = dialogView.findViewById(R.id.addFoodDescription);
             EditText foodPrice = dialogView.findViewById(R.id.addFoodPrice);
             Spinner foodCategory = dialogView.findViewById(R.id.foodTypeSpinner);
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                     R.array.category_options, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             foodCategory.setAdapter(adapter);
@@ -137,14 +140,14 @@ public class EditMenuActivity extends AppCompatActivity {
             builder.setView(dialogView);
             AlertDialog dialog = builder.create();
             confirmButton.setOnClickListener(
-                    v -> {
+                    v1 -> {
                         String name = foodName.getText().toString();
                         String description = foodDescription.getText().toString();
                         String priceStr = foodPrice.getText().toString();
                         String type = foodCategory.getSelectedItem().toString(); // Get the selected category from the spinner
 
                         if (priceStr.isEmpty()) {
-                            Toast.makeText(this, "Price cannot be empty", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Price cannot be empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -152,26 +155,25 @@ public class EditMenuActivity extends AppCompatActivity {
                         try {
                             price = Integer.parseInt(priceStr);
                         } catch (NumberFormatException e) {
-                            Toast.makeText(this, "Invalid price format", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Invalid price format", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         FoodItem foodItem = new FoodItem(name, description, price, "", type);
 
                         db.collection("foods").add(foodItem).addOnSuccessListener(documentReference -> {
                             foodItem.setDocumentId(documentReference.getId());
-                            Toast.makeText(EditMenuActivity.this, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Item updated successfully", Toast.LENGTH_SHORT).show();
                         }).addOnFailureListener(e -> {
-                            Toast.makeText(EditMenuActivity.this, "Failed to update item", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Failed to update item", Toast.LENGTH_SHORT).show();
                         });
-                        menuAdapter.notifyDataSetChanged();
+                        menuAdapterAdmin.notifyDataSetChanged();
                         dialog.dismiss();
                     }
             );
             dialog.show();
         });
-        menuRecyclerView.setAdapter(menuAdapter);
-        menuRecyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
-
+        menuRecyclerView.setAdapter(menuAdapterAdmin);
+        menuRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         //this will get all the food items from the database and display them in the menu
         db.collection("foods")
                 .get()
@@ -198,7 +200,7 @@ public class EditMenuActivity extends AppCompatActivity {
                                 foodItems.add(new FoodItem(name, description, price, documentId, type));
                             }
                         }
-                        menuAdapter.notifyDataSetChanged();
+                        menuAdapterAdmin.notifyDataSetChanged();
                     }
                 });
 
@@ -233,7 +235,7 @@ public class EditMenuActivity extends AppCompatActivity {
                                     FoodItem newFoodItem = new FoodItem(name, description, price, documentId, type);
                                     foodItems.add(newFoodItem);
 
-                                    menuAdapter.notifyDataSetChanged();
+                                    menuAdapterAdmin.notifyDataSetChanged();
                                 }
                                 break;
 
@@ -250,7 +252,7 @@ public class EditMenuActivity extends AppCompatActivity {
 
                                         // Replace the old item with the modified one
                                         foodItems.set(i, modifiedFoodItem);
-                                        menuAdapter.notifyDataSetChanged();
+                                        menuAdapterAdmin.notifyDataSetChanged();
                                         break;
                                     }
                                 }
@@ -262,7 +264,7 @@ public class EditMenuActivity extends AppCompatActivity {
                                     if (foodItems.get(i).getDocumentId().equals(documentId)) {
                                         // Remove the item from the list
                                         foodItems.remove(i);
-                                        menuAdapter.notifyDataSetChanged();
+                                        menuAdapterAdmin.notifyDataSetChanged();
                                         break;
                                     }
                                 }
@@ -270,5 +272,6 @@ public class EditMenuActivity extends AppCompatActivity {
                         }
                     }
                 });
+        return view;
     }
 }

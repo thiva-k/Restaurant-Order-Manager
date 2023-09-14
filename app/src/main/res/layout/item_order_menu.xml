@@ -10,13 +10,13 @@
     android:elevation="10dp">
 
     <TextView
-        android:id="@+id/foodName"
+        android:id="@+id/foodNameWaiter"
         android:layout_width="108dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:text="Food name"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_marginTop="72dp"
         android:text="Qty :"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -38,18 +38,18 @@
         android:layout_marginTop="72dp"
         android:text="3"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/totalPrice"
+        android:id="@+id/orderTableNumber"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
         android:layout_marginStart="248dp"
         android:layout_marginTop="12dp"
         android:text="300"
         android:textSize="34sp"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -60,11 +60,11 @@
         android:layout_marginTop="28dp"
         android:text=" Price -   Rs."
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/foodImage"
+        android:id="@+id/foodImageAdmin"
         android:layout_width="96dp"
         android:layout_height="98dp"
         android:layout_marginStart="16dp"
@@ -77,27 +77,27 @@
         tools:srcCompat="@drawable/baseline_emoji_food_beverage_24" />
 
     <TextView
-        android:id="@+id/unitPrice"
+        android:id="@+id/unitPriceAdmin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
         android:text="Unit Price - Rs. "
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/foodPrice"
+        android:id="@+id/unitPriceWaiter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="72dp"
         android:text="100"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/orderStatus"
+        android:id="@+id/orderButton"
         android:layout_width="149dp"
         android:layout_height="41dp"
         android:layout_marginStart="176dp"
@@ -105,7 +105,7 @@
         android:clickable="false"
         android:text="Ordered"
         app:cornerRadius="8dp"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintStart_toEndOf="@+id/foodImageAdmin"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

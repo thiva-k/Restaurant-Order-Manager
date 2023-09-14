@@ -17,37 +17,22 @@
         android:theme="@style/Theme.Hotel_management"
         tools:targetApi="31">
         <activity
-            android:name=".ViewOfferActivity"
+            android:name=".admin.AddOfferActivity"
             android:exported="false" />
         <activity
-            android:name=".AddOfferActivity"
+            android:name=".admin.RegisterEmployeeActivity"
             android:exported="false" />
         <activity
-            android:name=".ViewEmployeesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TableActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EditMenuActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterEmployeeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".WaiterActivity"
+            android:name=".waiter.WaiterActivity"
             android:exported="false" />
         <activity
             android:name=".ChefActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminActivity"
+            android:name=".admin.AdminActivity"
             android:exported="false" />
         <activity
-            android:name=".EmployeeLoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MenuActivity"
+            android:name=".waiter.MenuActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

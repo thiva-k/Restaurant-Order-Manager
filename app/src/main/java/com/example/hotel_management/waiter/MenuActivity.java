@@ -1,4 +1,4 @@
-package com.example.hotel_management;
+package com.example.hotel_management.waiter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,29 +15,28 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.FoodItem;
 import com.example.hotel_management.datatypes.OrderItem;
-import com.example.hotel_management.recyledview.MenuAdapter;
-import com.example.hotel_management.recyledview.OrderListAdapter;
+import com.example.hotel_management.recyledview.MenuAdapterWaiter;
+import com.example.hotel_management.recyledview.OrderListAdapterMenu;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MenuActivity extends AppCompatActivity {
 
     private RecyclerView foodRecyclerView;
-    private MenuAdapter menuAdapter;
+    private MenuAdapterWaiter menuAdapterWaiter;
     private ArrayList<FoodItem> foodItems;
     private RecyclerView orderRecyclerView;
-    private OrderListAdapter orderListAdapter;
+    private OrderListAdapterMenu orderListAdapter;
     private ArrayList<OrderItem> orderItems;
     private Integer tableID;
     private String status;
@@ -63,15 +62,15 @@ public class MenuActivity extends AppCompatActivity {
 
         // Order list
         orderItems = new ArrayList<>();
-        orderListAdapter = new OrderListAdapter(orderItems);
+        orderListAdapter = new OrderListAdapterMenu(orderItems);
         orderRecyclerView = findViewById(R.id.orderList);
         orderRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         orderRecyclerView.setAdapter(orderListAdapter);
 
         //food menu
         foodItems = new ArrayList<>();
-        menuAdapter = new MenuAdapter(foodItems);
-        menuAdapter.setOnFoodItemListener((foodItem)->{
+        menuAdapterWaiter = new MenuAdapterWaiter(foodItems);
+        menuAdapterWaiter.setOnFoodItemListener((foodItem)->{
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View popUpView = getLayoutInflater().inflate(R.layout.pop_up_order_confirm, null);
             TextView foodName = popUpView.findViewById(R.id.menuItemName);
@@ -139,7 +138,7 @@ public class MenuActivity extends AppCompatActivity {
             }
             );
 
-        foodRecyclerView.setAdapter(menuAdapter);
+        foodRecyclerView.setAdapter(menuAdapterWaiter);
 
         // Retrieve initial food items from Firestore
         db.collection("foods")
@@ -167,7 +166,7 @@ public class MenuActivity extends AppCompatActivity {
                                 foodItems.add(new FoodItem(name, description, price, documentId, type));
                             }
                         }
-                        menuAdapter.notifyDataSetChanged();
+                        menuAdapterWaiter.notifyDataSetChanged();
                     }
                 });
 
@@ -202,7 +201,7 @@ public class MenuActivity extends AppCompatActivity {
                                     FoodItem newFoodItem = new FoodItem(name, description, price, documentId, type);
                                     foodItems.add(newFoodItem);
 
-                                    menuAdapter.notifyDataSetChanged();
+                                    menuAdapterWaiter.notifyDataSetChanged();
                                 }
                                 break;
 
@@ -219,7 +218,7 @@ public class MenuActivity extends AppCompatActivity {
 
                                         // Replace the old item with the modified one
                                         foodItems.set(i, modifiedFoodItem);
-                                        menuAdapter.notifyDataSetChanged();
+                                        menuAdapterWaiter.notifyDataSetChanged();
                                         break;
                                     }
                                 }

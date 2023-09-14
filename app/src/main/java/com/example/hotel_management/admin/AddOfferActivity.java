@@ -1,4 +1,4 @@
-package com.example.hotel_management;
+package com.example.hotel_management.admin;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -12,13 +12,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.hotel_management.R;
+import com.example.hotel_management.datatypes.Offer;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 

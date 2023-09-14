@@ -4,89 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdminActivity">
+    tools:context=".admin.AdminActivity">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/topBar"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/PrimaryAccent"
+    android:backgroundTintMode="screen"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <!-- TextView -->
-
-    <!-- Buttons -->
-
-
-    <!-- Logo -->
+    <ImageView
+        android:id="@+id/topBarLogo"
+        android:layout_width="72dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/_logo" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/topBarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:text="Hi, Waiter!"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:layout_marginTop="16dp"
+        android:text="Waiter Panel"
+        android:textColor="@color/white"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toEndOf="@+id/topBarLogo"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/editProfileButton"
+        android:id="@+id/profileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
         android:backgroundTint="@color/PrimaryAccent"
-        android:text="Edit Profile"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:cornerRadius="0dp"
+        android:drawableRight="@drawable/baseline_account_circle_24"
+        android:text="Profile"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.297" />
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/viewOrderButton"
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        style="@style/CustomTabLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/PrimaryAccent"
-        android:text="View Orders"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:cornerRadius="0dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editProfileButton" />
+        app:layout_constraintTop_toBottomOf="@+id/topBar"
+        app:tabGravity="center"
+        app:tabIndicatorColor="@color/LightAccent"
+        app:tabSelectedTextColor="@color/LightAccent">
 
-    <Button
-        android:id="@+id/takeOrderButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending Orders" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tables" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/waiterViewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
-
-        android:backgroundTint="@color/PrimaryAccent"
-        android:text="Take Order"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:cornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewOrderButton" />
-
-    <Button
-        android:id="@+id/viewMenuButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/PrimaryAccent"
-        android:text="View Menu"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:cornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/takeOrderButton" />
-
-    <include
-        layout="@layout/layout_logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,66 +1,67 @@
-package com.example.hotel_management;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.hotel_management.waiter;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.OrderItem;
-import com.example.hotel_management.recyledview.OrderListAdapterChef;
+import com.example.hotel_management.recyledview.OrderListAdapterWaiter;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class ChefActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private OrderListAdapterChef orderListAdapterChef;
-    private ArrayList<OrderItem> orderItems;
-    private TextView noOrdersText;
-    private FirebaseFirestore db;
-    
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chef);
-        noOrdersText = findViewById(R.id.noOrdersText2);
+public class OrderFragment extends Fragment {
+    RecyclerView recyclerView;
+    OrderListAdapterWaiter orderListAdapterWaiter;
+    ArrayList<OrderItem> orderItems;
+    TextView noOrdersText;
+    FirebaseFirestore db;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_order, container, false);
+        noOrdersText = view.findViewById(R.id.noOrdersText);
         db = FirebaseFirestore.getInstance();
-        recyclerView = findViewById(R.id.chefOrderRecycleView);
+        recyclerView = view.findViewById(R.id.waiterOrderRecyleView);
         orderItems = new ArrayList<>();
-        orderListAdapterChef = new OrderListAdapterChef(orderItems);
-        orderListAdapterChef.setOnOrderButtonClickListener(orderItem -> {
+        orderListAdapterWaiter = new OrderListAdapterWaiter(orderItems);
+        orderListAdapterWaiter.setOnOrderButtonClickListener(orderItem -> {
             Log.d("heyyou","order " +orderItem.orderID);
-            if(orderItem.status.equals("Ordered")){
-                orderItem.status = "Preparing";
+            if(orderItem.status.equals("Prepared")){
+                orderItem.status = "Delivering";
                 orderItems.add(0, orderItem);
-                db.collection("orders").document(orderItem.orderID).update("status", "Preparing").addOnSuccessListener(documentReference -> {
+                db.collection("orders").document(orderItem.orderID).update("status", "Delivering").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
                 });
             }
             else{
-                orderItem.status="Prepared";
+                orderItem.status="Delivered";
                 orderItems.remove(orderItem);
                 if(orderItems.size()==0){
                     noOrdersText.setVisibility(View.VISIBLE);
                 }
-                orderListAdapterChef.notifyDataSetChanged();
-                db.collection("orders").document(orderItem.orderID).update("status", "Prepared").addOnSuccessListener(documentReference -> {
+                orderListAdapterWaiter.notifyDataSetChanged();
+                db.collection("orders").document(orderItem.orderID).update("status", "Delivered").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
                 });
             }
         });
-        recyclerView.setAdapter(orderListAdapterChef);
-        recyclerView.setLayoutManager(new LinearLayoutManager(ChefActivity.this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(orderListAdapterWaiter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         //fetching data from firestore
         db.collection("orders").whereEqualTo("status", "Ordered").get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -78,7 +79,7 @@ public class ChefActivity extends AppCompatActivity {
             if(orderItems.size()==0){
                 noOrdersText.setVisibility(View.VISIBLE);
             }
-            orderListAdapterChef.notifyDataSetChanged();
+            orderListAdapterWaiter.notifyDataSetChanged();
         }).addOnFailureListener(e -> {
             Log.d("FirestoreData", "Error getting documents: ", e);
         });
@@ -105,7 +106,7 @@ public class ChefActivity extends AppCompatActivity {
                                 if(orderItems.size()==0){
                                     noOrdersText.setVisibility(View.VISIBLE);
                                 }
-                                orderListAdapterChef.notifyDataSetChanged();
+                                orderListAdapterWaiter.notifyDataSetChanged();
                                 break;
                             }
                         }
@@ -121,9 +122,12 @@ public class ChefActivity extends AppCompatActivity {
                         orderItem.orderID = change.getDocument().getId();
                         orderItems.add(orderItem);
                         noOrdersText.setVisibility(View.GONE);
-                        orderListAdapterChef.notifyDataSetChanged();
+                        orderListAdapterWaiter.notifyDataSetChanged();
                     }
                 }
             }
-        }));    }
+        }));
+
+        return view;
+    }
 }

@@ -15,16 +15,16 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class OrderListAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<OrderListAdapter.OrderItemViewHolder>{
+public class OrderListAdapterMenu extends androidx.recyclerview.widget.RecyclerView.Adapter<OrderListAdapterMenu.OrderItemViewHolder>{
     public ArrayList<OrderItem> orderItems;
 
-    public OrderListAdapter(ArrayList<OrderItem> orderItems){
+    public OrderListAdapterMenu(ArrayList<OrderItem> orderItems){
         this.orderItems = orderItems;
     }
     @NonNull
     @Override
     public OrderItemViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
-        android.view.View view = android.view.LayoutInflater.from(parent.getContext()).inflate(R.layout.order_item, parent, false);
+        android.view.View view = android.view.LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order_menu, parent, false);
         return new OrderItemViewHolder(view);
     }
     @Override
@@ -53,12 +53,12 @@ public class OrderListAdapter extends androidx.recyclerview.widget.RecyclerView.
         public Button status;
         public OrderItemViewHolder(android.view.View itemView) {
             super(itemView);
-            foodName = itemView.findViewById(R.id.foodName);
-            foodPrice = itemView.findViewById(R.id.foodPrice);
-            foodImage = itemView.findViewById(R.id.foodImage);
+            foodName = itemView.findViewById(R.id.foodNameWaiter);
+            foodPrice = itemView.findViewById(R.id.unitPriceWaiter);
+            foodImage = itemView.findViewById(R.id.foodImageAdmin);
             quantity = itemView.findViewById(R.id.orderQuantity);
-            totalPrice = itemView.findViewById(R.id.totalPrice);
-            status = itemView.findViewById(R.id.orderStatus);
+            totalPrice = itemView.findViewById(R.id.orderTableNumber);
+            status = itemView.findViewById(R.id.orderButton);
             Log.d("hey", "OrderItemViewHolder: " + foodName.getText());
         }
     }

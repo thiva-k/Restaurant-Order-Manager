@@ -1,10 +1,9 @@
 package com.example.hotel_management.recyledview;
 
-import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -18,10 +17,26 @@ import java.util.List;
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> {
 
     private List<Table> tables;
-    private OnTableItemListener onTableItemListener;
+    private OnTableDetailsListener onTableDetailsListener;
+    private OnStartSessionListener onStartSessionListener;
+    private OnCancelBookingListener onCancelBookingListener;
+    private OnEditSessionListener onEditSessionListener;
+    private OnEndSessionListener onEndSessionListener;
 
-    public interface OnTableItemListener {
-        void OnTableItemClick(Table table);
+    public interface OnTableDetailsListener {
+        void OnTableDetailsClick(Table table);
+    }
+    public interface OnStartSessionListener {
+        void OnStartSessionClick(Table table);
+    }
+    public interface OnCancelBookingListener {
+        void OnCancelBookingClick(Table table);
+    }
+    public interface OnEditSessionListener {
+        void OnEditSessionClick(Table table);
+    }
+    public interface OnEndSessionListener {
+        void OnEndSessionClick(Table table);
     }
 
     public TableAdapter(List<Table> tables) {
@@ -38,12 +53,34 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Table table = tables.get(position);
-        int color = ContextCompat.getColor(holder.itemView.getContext(), R.color.Preparing);
+        int color = ContextCompat.getColor(holder.itemView.getContext(), getColor(table.status));
         holder.itemView.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.rounded_corner_outer));
-        holder.tableID.setText(table.tableID.toString());
+        holder.tableID.setText("Table "+table.tableID.toString());
         holder.tableStatus.setText(table.status);
         holder.tableStatus.setTextColor(color);
-        holder.itemView.setOnClickListener(v -> onTableItemListener.OnTableItemClick(table));
+        holder.viewDetailsButton.setOnClickListener(v -> {
+            onTableDetailsListener.OnTableDetailsClick(table);
+        });
+        switch(table.status){
+            case "Available":
+                holder.startSessionButton.setVisibility(View.VISIBLE);
+                holder.startSessionButton.setOnClickListener(v -> onStartSessionListener.OnStartSessionClick(table));
+                break;
+            case "Booked":
+                holder.cancelBookingButton.setVisibility(View.VISIBLE);
+                holder.cancelBookingButton.setOnClickListener(v -> onCancelBookingListener.OnCancelBookingClick(table));
+                break;
+            case "Ongoing":
+                holder.editSessionButton.setVisibility(View.VISIBLE);
+                holder.editSessionButton.setOnClickListener(v -> {
+                    onEditSessionListener.OnEditSessionClick(table);
+                });
+                holder.endSessionButton.setVisibility(View.VISIBLE);
+                holder.endSessionButton.setOnClickListener(v -> {
+                    onEndSessionListener.OnEndSessionClick(table);
+                });
+                break;
+        }
     }
 
     @Override
@@ -51,13 +88,31 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         return tables.size();
     }
 
-    public void setOnTableItemListener(OnTableItemListener onTableItemListener) {
-        this.onTableItemListener = onTableItemListener;
+    //setters for listener interfaces
+    public void setOnTableDetailsListener(OnTableDetailsListener onTableDetailsListener) {
+        this.onTableDetailsListener = onTableDetailsListener;
+    }
+    public void setOnStartSessionListener(OnStartSessionListener onStartSessionListener) {
+        this.onStartSessionListener = onStartSessionListener;
+    }
+    public void setOnCancelBookingListener(OnCancelBookingListener onCancelBookingListener) {
+        this.onCancelBookingListener = onCancelBookingListener;
+    }
+    public void setOnEditSessionListener(OnEditSessionListener onEditSessionListener) {
+        this.onEditSessionListener = onEditSessionListener;
+    }
+    public void setOnEndSessionListener(OnEndSessionListener onEndSessionListener) {
+        this.onEndSessionListener = onEndSessionListener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tableID;
         TextView tableStatus;
+        Button startSessionButton;
+        Button cancelBookingButton;
+        Button editSessionButton;
+        Button endSessionButton;
+        Button viewDetailsButton;
         View itemView;
 
         public ViewHolder(@NonNull View itemView) {
@@ -65,6 +120,23 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
             this.itemView = itemView;
             tableID = itemView.findViewById(R.id.tableID);
             tableStatus = itemView.findViewById(R.id.tableStatus);
+            startSessionButton = itemView.findViewById(R.id.startSessionButton);
+            cancelBookingButton = itemView.findViewById(R.id.cancelBookingButton);
+            editSessionButton = itemView.findViewById(R.id.editSessionButton);
+            endSessionButton = itemView.findViewById(R.id.endSessionButton);
+            viewDetailsButton = itemView.findViewById(R.id.detailsButton);
+        }
+    }
+    private int getColor(String status){
+        switch (status){
+            case "Available":
+                return R.color.Success;
+            case "Booked":
+                return R.color.Ordered;
+            case "Ongoing":
+                return R.color.Failure;
+            default:
+                return R.color.Success;
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.hotel_management;
+package com.example.hotel_management.recyledview;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hotel_management.datatypes.Offer;
+import com.example.hotel_management.R;
 
 import java.util.List;
 
@@ -30,7 +33,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OfferViewH
     @Override
     public OfferViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.offer_item, parent, false);
+                .inflate(R.layout.item_offer, parent, false);
         return new OfferViewHolder(itemView);
     }
 

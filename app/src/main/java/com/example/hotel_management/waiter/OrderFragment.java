@@ -32,7 +32,7 @@ public class OrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
         noOrdersText = view.findViewById(R.id.noOrdersText);
         db = FirebaseFirestore.getInstance();
-        recyclerView = view.findViewById(R.id.orderRecyleView);
+        recyclerView = view.findViewById(R.id.waiterOrderRecyleView);
         orderItems = new ArrayList<>();
         orderListAdapterWaiter = new OrderListAdapterWaiter(orderItems);
         orderListAdapterWaiter.setOnOrderButtonClickListener(orderItem -> {

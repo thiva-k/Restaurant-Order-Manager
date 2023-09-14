@@ -53,9 +53,9 @@ public class OrderListAdapterMenu extends androidx.recyclerview.widget.RecyclerV
         public Button status;
         public OrderItemViewHolder(android.view.View itemView) {
             super(itemView);
-            foodName = itemView.findViewById(R.id.orderFoodName);
-            foodPrice = itemView.findViewById(R.id.foodPrice);
-            foodImage = itemView.findViewById(R.id.foodImage);
+            foodName = itemView.findViewById(R.id.foodNameWaiter);
+            foodPrice = itemView.findViewById(R.id.unitPriceWaiter);
+            foodImage = itemView.findViewById(R.id.foodImageAdmin);
             quantity = itemView.findViewById(R.id.orderQuantity);
             totalPrice = itemView.findViewById(R.id.orderTableNumber);
             status = itemView.findViewById(R.id.orderButton);

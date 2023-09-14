@@ -6,7 +6,7 @@
     <item name="spinnerUserType" type="id" />
     <item name="foodNameOrder" type="id" />
     <item name="foodDescription" type="id" />
-    <item name="foodPrice" type="id" />
+    <item name="unitPriceWaiter" type="id" />
     <item name="spinnerCategory" type="id" />
     <item name="editTextName" type="id" />
     <item name="editTextDescription" type="id" />

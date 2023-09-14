@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.hotel_management.MenuActivity;
 import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.Table;
 import com.example.hotel_management.recyledview.TableAdapter;
@@ -30,7 +29,7 @@ public class TableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
         db = FirebaseFirestore.getInstance();
-        recyclerView = view.findViewById(R.id.orderRecyleView);
+        recyclerView = view.findViewById(R.id.waiterOrderRecyleView);
         tables = new ArrayList<>();
         tableAdapter = new TableAdapter(tables);
         recyclerView.setAdapter(tableAdapter);

@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/Gray"
-    android:gravity="center"
-    tools:context=".EditMenuActivity">
+    android:gravity="center">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/foodEditRecylerView"
+        android:id="@+id/employeeEditRecylerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
@@ -22,7 +21,7 @@
         app:layout_constraintVertical_bias="0.157" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addFoodItemButton"
+        android:id="@+id/addEmployeeButton"
         app:tint="@null"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,6 +32,6 @@
         android:src="@drawable/baseline_add_24"
         app:backgroundTint="@color/LightAccent"
         app:backgroundTintMode="src_in"
-        app:layout_constraintBottom_toBottomOf="@+id/foodEditRecylerView"
-        app:layout_constraintEnd_toEndOf="@+id/foodEditRecylerView" />
+        app:layout_constraintBottom_toBottomOf="@+id/employeeEditRecylerView"
+        app:layout_constraintEnd_toEndOf="@+id/employeeEditRecylerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

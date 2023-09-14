@@ -3,12 +3,8 @@ package com.example.hotel_management.waiter;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
-import com.example.hotel_management.MenuActivity;
 import com.example.hotel_management.R;
 import com.google.android.material.tabs.TabLayout;
 

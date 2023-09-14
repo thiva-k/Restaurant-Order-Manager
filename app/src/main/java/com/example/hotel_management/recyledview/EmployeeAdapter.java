@@ -1,4 +1,4 @@
-package com.example.hotel_management;
+package com.example.hotel_management.recyledview;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import android.widget.TextView; // Don't forget this import
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hotel_management.datatypes.Employee;
+import com.example.hotel_management.R;
 
 import java.util.List;
 

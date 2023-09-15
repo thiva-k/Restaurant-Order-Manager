@@ -10,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.FoodItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class MenuAdapterWaiter extends RecyclerView.Adapter<MenuAdapterWaiter.ViewHolder> {
 
     private List<FoodItem> foodItems;
+    private Picasso picasso;
     private OnFoodItemListener onFoodItemListener;
 
     public interface OnFoodItemListener {
@@ -30,6 +32,7 @@ public class MenuAdapterWaiter extends RecyclerView.Adapter<MenuAdapterWaiter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food_waiter, parent, false);
+        picasso = Picasso.get();
         return new ViewHolder(view);
     }
 
@@ -37,9 +40,9 @@ public class MenuAdapterWaiter extends RecyclerView.Adapter<MenuAdapterWaiter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FoodItem foodItem = foodItems.get(position);
         holder.foodName.setText(foodItem.getName());
-        holder.foodDescription.setText(foodItem.getDescription());
         holder.foodPrice.setText(String.valueOf(foodItem.getPrice()));
-        holder.foodImage.setImageResource(R.drawable._biriyani);
+        picasso.load(foodItem.getImage()).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
+        holder.foodImage.setClipToOutline(true);
         holder.itemView.setOnClickListener(v -> onFoodItemListener.OnFoodItemClick(foodItem));
     }
 
@@ -61,7 +64,6 @@ public class MenuAdapterWaiter extends RecyclerView.Adapter<MenuAdapterWaiter.Vi
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             foodName = itemView.findViewById(R.id.foodNameWaiter);
-            foodDescription = itemView.findViewById(R.id.foodDescriptionWaiter);
             foodPrice= itemView.findViewById(R.id.unitPriceWaiter);
             foodImage = itemView.findViewById(R.id.foodImageWaiter);
         }

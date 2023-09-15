@@ -17,12 +17,6 @@
         android:theme="@style/Theme.Hotel_management"
         tools:targetApi="31">
         <activity
-            android:name=".admin.AddOfferActivity"
-            android:exported="false" />
-        <activity
-            android:name=".admin.RegisterEmployeeActivity"
-            android:exported="false" />
-        <activity
             android:name=".waiter.WaiterActivity"
             android:exported="false" />
         <activity

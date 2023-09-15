@@ -5,17 +5,18 @@ public class FoodItem {
     private String name;
     private String description;
     private Integer price;
-
+    private String image;
 
     private String documentId;
     private String type;
 
-    public FoodItem(String name, String description, Integer price, String documentId, String type) {
+    public FoodItem(String name, String description, Integer price, String documentId, String type, String image) {
         this.name = name;
         this.description = description;
         this.price=price;
         this.documentId = documentId;
         this.type = type;
+        this.image = image;
     }
 
     public String getDocumentId() {
@@ -35,6 +36,9 @@ public class FoodItem {
     }
     public String getType() {
         return type;
+    }
+    public String getImage() {
+        return image;
     }
 
     public void setDocumentId(String documentId) {
@@ -56,5 +60,8 @@ public class FoodItem {
 
     public void setType(String type) {
         this.type = type;
+    }
+    public void setImage(String image) {
+        this.image = image;
     }
 }

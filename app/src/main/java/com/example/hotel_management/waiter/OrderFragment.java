@@ -36,7 +36,6 @@ public class OrderFragment extends Fragment {
         orderItems = new ArrayList<>();
         orderListAdapterWaiter = new OrderListAdapterWaiter(orderItems);
         orderListAdapterWaiter.setOnOrderButtonClickListener(orderItem -> {
-            Log.d("heyyou","order " +orderItem.orderID);
             if(orderItem.status.equals("Prepared")){
                 orderItem.status = "Delivering";
                 orderItems.add(0, orderItem);
@@ -64,14 +63,15 @@ public class OrderFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         //fetching data from firestore
-        db.collection("orders").whereEqualTo("status", "Ordered").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        db.collection("orders").whereEqualTo("status", "Prepared").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
                 String name = documentSnapshot.getString("name");
                 Integer price = documentSnapshot.getLong("price").intValue();
                 Integer quantity = documentSnapshot.getLong("quantity").intValue();
                 Integer tableID = documentSnapshot.getLong("tableID").intValue();
                 String notes = documentSnapshot.getString("notes");
-                OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes);
+                String image = documentSnapshot.getString("url");
+                OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes ,image);
                 orderItem.status = "Prepared";
                 orderItem.orderID = documentSnapshot.getId();
                 orderItems.add(orderItem);
@@ -95,35 +95,55 @@ public class OrderFragment extends Fragment {
                 return;
             }
             for (DocumentChange change : value.getDocumentChanges()) {
-                if(change.getType()== DocumentChange.Type.MODIFIED){
-                    String newStatus= change.getDocument().getString("status");
-                    if(newStatus.equals("Delivering")){
-                        //remove from the list
-                        String id = change.getDocument().getId();
-                        for(OrderItem item: orderItems){
-                            if(item.orderID.equals(id)){
-                                orderItems.remove(item);
-                                if(orderItems.size()==0){
-                                    noOrdersText.setVisibility(View.VISIBLE);
-                                }
-                                orderListAdapterWaiter.notifyDataSetChanged();
-                                break;
+                switch (change.getType()) {
+                    case ADDED:
+                        if(change.getDocument().getString("status").equals("Prepared")){
+                            Log.d("FirestoreData", "New order: " + change.getDocument().getData());
+                            String name = change.getDocument().getString("name");
+                            Integer price = change.getDocument().getLong("price").intValue();
+                            Integer quantity = change.getDocument().getLong("quantity").intValue();
+                            Integer tableID = change.getDocument().getLong("tableID").intValue();
+                            String notes = change.getDocument().getString("notes");
+                            String image = change.getDocument().getString("url");
+                            OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes, image);
+                            orderItem.status = "Prepared";
+                            orderItem.orderID = change.getDocument().getId();
+                            orderItems.add(orderItem);
+                            if(orderItems.size()!=0){
+                                noOrdersText.setVisibility(View.GONE);
                             }
+                            orderListAdapterWaiter.notifyDataSetChanged();
                         }
-                    }
-                    else if(newStatus.equals("Prepared")){
-                        String name = change.getDocument().getString("name");
-                        Integer price = change.getDocument().getLong("price").intValue();
-                        Integer quantity = change.getDocument().getLong("quantity").intValue();
-                        Integer tableID = change.getDocument().getLong("tableID").intValue();
-                        String notes = change.getDocument().getString("notes");
-                        OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes);
-                        orderItem.status = "Prepared";
-                        orderItem.orderID = change.getDocument().getId();
-                        orderItems.add(orderItem);
-                        noOrdersText.setVisibility(View.GONE);
-                        orderListAdapterWaiter.notifyDataSetChanged();
-                    }
+                        break;
+                    case MODIFIED:
+                        String newStatus = change.getDocument().getString("status");
+                        if (newStatus.equals("Delivering")) {
+                            //remove from the list
+                            String id = change.getDocument().getId();
+                            for (OrderItem item : orderItems) {
+                                if (item.orderID.equals(id)) {
+                                    orderItems.remove(item);
+                                    if (orderItems.size() == 0) {
+                                        noOrdersText.setVisibility(View.VISIBLE);
+                                    }
+                                    orderListAdapterWaiter.notifyDataSetChanged();
+                                    break;
+                                }
+                            }}
+                        else if(newStatus.equals("Prepared")){
+                            String name = change.getDocument().getString("name");
+                            Integer price = change.getDocument().getLong("price").intValue();
+                            Integer quantity = change.getDocument().getLong("quantity").intValue();
+                            Integer tableID = change.getDocument().getLong("tableID").intValue();
+                            String notes = change.getDocument().getString("notes");
+                            String image = change.getDocument().getString("url");
+                            OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes, image);
+                            orderItem.status = "Prepared";
+                            orderItem.orderID = change.getDocument().getId();
+                            orderItems.add(orderItem);
+                            noOrdersText.setVisibility(View.GONE);
+                            orderListAdapterWaiter.notifyDataSetChanged();
+                        }
                 }
             }
         }));

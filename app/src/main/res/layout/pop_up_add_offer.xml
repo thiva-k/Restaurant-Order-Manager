@@ -2,69 +2,68 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/viewMenuButton"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".admin.AddOfferActivity">
+    android:layout_width="450dp"
+    android:layout_height="600dp"
+    android:background="@drawable/rounded_corners"
+    android:elevation="10dp">
 
     <Spinner
         android:id="@+id/foodNameSpinner"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="40dp"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/startDateEditText"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="false"
         android:hint="Start Date"
-        android:inputType="none"
-        android:textSize="25sp"
+        android:inputType="datetime"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/foodNameSpinner" />
 
     <EditText
         android:id="@+id/endDateEditText"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="false"
         android:hint="End Date"
-        android:inputType="none"
-        android:textSize="25sp"
+        android:inputType="datetime"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startDateEditText" />
 
     <EditText
         android:id="@+id/percentageEditText"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Percentage"
         android:inputType="number"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endDateEditText" />
 
     <EditText
         android:id="@+id/descriptionEditText"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Description"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/percentageEditText" />
@@ -74,25 +73,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/PrimaryAccent"
+        android:backgroundTint="@color/LightAccent"
         android:text="Add Offer"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:cornerRadius="0dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionEditText"
-        app:layout_constraintVertical_bias="0.025" />
+        app:layout_constraintVertical_bias="0.211" />
 
-    <include
-        layout="@layout/layout_logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Add New Offer"
+        android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

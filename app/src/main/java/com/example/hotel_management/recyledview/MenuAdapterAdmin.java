@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.FoodItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class MenuAdapterAdmin extends RecyclerView.Adapter<MenuAdapterAdmin.ViewHolder> {
 
     private List<FoodItem> foodItems;
+    private Picasso picasso;
     private OnFoodItemListener onFoodItemListener;
 
     public interface OnFoodItemListener {
@@ -31,6 +33,7 @@ public class MenuAdapterAdmin extends RecyclerView.Adapter<MenuAdapterAdmin.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food_admin, parent, false);
+        picasso = Picasso.get();
         return new ViewHolder(view);
     }
 
@@ -40,7 +43,7 @@ public class MenuAdapterAdmin extends RecyclerView.Adapter<MenuAdapterAdmin.View
         holder.foodName.setText(foodItem.getName());
         holder.foodDescription.setText(foodItem.getDescription());
         holder.foodPrice.setText(String.valueOf(foodItem.getPrice()));
-        holder.foodImage.setImageResource(R.drawable._biriyani);
+        picasso.load(foodItem.getImage()).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
         holder.itemView.setOnClickListener(v -> onFoodItemListener.OnFoodItemClick(foodItem));
     }
 

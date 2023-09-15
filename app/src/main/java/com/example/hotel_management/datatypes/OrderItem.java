@@ -10,6 +10,7 @@ import java.util.Map;
 public class OrderItem {
     public String name;
     public Integer price;
+    public String image;
     public Integer quantity;
     public Integer totalPrice;
     public Integer tableID;
@@ -24,7 +25,7 @@ public class OrderItem {
         void onOrderIdReceived(String orderId);
     }
 
-    public OrderItem(String name, Integer price, Integer quantity, Integer tableID, String notes ) {
+    public OrderItem(String name, Integer price, Integer quantity, Integer tableID, String notes, String image) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -32,7 +33,7 @@ public class OrderItem {
         this.status = "Ordered";
         this.tableID = tableID;
         this.notes = notes;
-
+        this.image = image;
 
     }
     public void firestoreUpload() {

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.hotel_management.datatypes.OrderItem;
@@ -35,7 +36,6 @@ public class ChefActivity extends AppCompatActivity {
         orderItems = new ArrayList<>();
         orderListAdapterChef = new OrderListAdapterChef(orderItems);
         orderListAdapterChef.setOnOrderButtonClickListener(orderItem -> {
-            Log.d("heyyou","order " +orderItem.orderID);
             if(orderItem.status.equals("Ordered")){
                 orderItem.status = "Preparing";
                 orderItems.add(0, orderItem);
@@ -62,26 +62,7 @@ public class ChefActivity extends AppCompatActivity {
         recyclerView.setAdapter(orderListAdapterChef);
         recyclerView.setLayoutManager(new LinearLayoutManager(ChefActivity.this, LinearLayoutManager.VERTICAL, false));
 
-        //fetching data from firestore
-        db.collection("orders").whereEqualTo("status", "Ordered").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                String name = documentSnapshot.getString("name");
-                Integer price = documentSnapshot.getLong("price").intValue();
-                Integer quantity = documentSnapshot.getLong("quantity").intValue();
-                Integer tableID = documentSnapshot.getLong("tableID").intValue();
-                String notes = documentSnapshot.getString("notes");
-                OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes);
-                orderItem.status = "Prepared";
-                orderItem.orderID = documentSnapshot.getId();
-                orderItems.add(orderItem);
-            }
-            if(orderItems.size()==0){
-                noOrdersText.setVisibility(View.VISIBLE);
-            }
-            orderListAdapterChef.notifyDataSetChanged();
-        }).addOnFailureListener(e -> {
-            Log.d("FirestoreData", "Error getting documents: ", e);
-        });
+
         //listen to real time changes in the database
         //if a new item is added then that will have the status "Prepared". so we need to add that to the list
         //if an item status changed from "Prepared" to "Delivering" then we need to remove that from the list
@@ -94,36 +75,42 @@ public class ChefActivity extends AppCompatActivity {
                 return;
             }
             for (DocumentChange change : value.getDocumentChanges()) {
-                if(change.getType()== DocumentChange.Type.MODIFIED){
-                    String newStatus= change.getDocument().getString("status");
-                    if(newStatus.equals("Delivering")){
-                        //remove from the list
-                        String id = change.getDocument().getId();
-                        for(OrderItem item: orderItems){
-                            if(item.orderID.equals(id)){
-                                orderItems.remove(item);
-                                if(orderItems.size()==0){
-                                    noOrdersText.setVisibility(View.VISIBLE);
-                                }
-                                orderListAdapterChef.notifyDataSetChanged();
-                                break;
+                switch (change.getType()) {
+                    case ADDED:
+                        if(change.getDocument().getString("status").equals("Ordered")){
+                            Log.d("FirestoreData", "New order: " + change.getDocument().getData());
+                            String name = change.getDocument().getString("name");
+                            Integer price = change.getDocument().getLong("price").intValue();
+                            Integer quantity = change.getDocument().getLong("quantity").intValue();
+                            Integer tableID = change.getDocument().getLong("tableID").intValue();
+                            String notes = change.getDocument().getString("notes");
+                            String image = change.getDocument().getString("url");
+                            OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes, image);
+                            orderItem.orderID = change.getDocument().getId();
+                            orderItems.add(orderItem);
+                            if(orderItems.size()!=0){
+                                noOrdersText.setVisibility(View.GONE);
                             }
+                            orderListAdapterChef.notifyDataSetChanged();
                         }
-                    }
-                    else if(newStatus.equals("Prepared")){
-                        String name = change.getDocument().getString("name");
-                        Integer price = change.getDocument().getLong("price").intValue();
-                        Integer quantity = change.getDocument().getLong("quantity").intValue();
-                        Integer tableID = change.getDocument().getLong("tableID").intValue();
-                        String notes = change.getDocument().getString("notes");
-                        OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes);
-                        orderItem.status = "Prepared";
-                        orderItem.orderID = change.getDocument().getId();
-                        orderItems.add(orderItem);
-                        noOrdersText.setVisibility(View.GONE);
-                        orderListAdapterChef.notifyDataSetChanged();
-                    }
+                        break;
+                    case MODIFIED:
+                        String newStatus = change.getDocument().getString("status");
+                        if (newStatus.equals("Preparing")) {
+                            //remove from the list
+                            String id = change.getDocument().getId();
+                            for (OrderItem item : orderItems) {
+                                if (item.orderID.equals(id)) {
+                                    orderItems.remove(item);
+                                    if (orderItems.size() == 0) {
+                                        noOrdersText.setVisibility(View.VISIBLE);
+                                    }
+                                    orderListAdapterChef.notifyDataSetChanged();
+                                    break;
+                                }
+                            }}
                 }
             }
-        }));    }
+        }));
+    }
 }

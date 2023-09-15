@@ -1,8 +1,8 @@
 package com.example.hotel_management.waiter;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +20,7 @@ import com.example.hotel_management.datatypes.FoodItem;
 import com.example.hotel_management.datatypes.OrderItem;
 import com.example.hotel_management.recyledview.MenuAdapterWaiter;
 import com.example.hotel_management.recyledview.OrderListAdapterMenu;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -71,7 +72,7 @@ public class MenuActivity extends AppCompatActivity {
         foodItems = new ArrayList<>();
         menuAdapterWaiter = new MenuAdapterWaiter(foodItems);
         menuAdapterWaiter.setOnFoodItemListener((foodItem)->{
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
             View popUpView = getLayoutInflater().inflate(R.layout.pop_up_order_confirm, null);
             TextView foodName = popUpView.findViewById(R.id.menuItemName);
             TextView foodPrice = popUpView.findViewById(R.id.menuItemPrice);
@@ -87,7 +88,7 @@ public class MenuActivity extends AppCompatActivity {
             confirmButton.setOnClickListener(v->{
                 Integer quantityValue = Integer.parseInt(quantity.getText().toString());
                 String note = notes.getText().toString();
-                OrderItem orderItem = new OrderItem(foodItem.getName(), foodItem.getPrice(), quantityValue, tableID ,note);
+                OrderItem orderItem = new OrderItem(foodItem.getName(), foodItem.getPrice(), quantityValue, tableID ,note, foodItem.getImage());
                 //this callback is called when the order is added to the database. we are checking whether there is an ongoing session in the given table
                 //if that's the case, the order will be added to that session. otherwise a new session will be created
                 orderItem.setCallback((orderId -> {
@@ -151,6 +152,7 @@ public class MenuActivity extends AppCompatActivity {
                             String description = document.getString("description");
                             Integer price = document.getLong("price").intValue();
                             String type = document.getString("type");
+                            String image = document.getString("url");
                             String documentId = document.getId();
 
                             // Check if the item with the same document ID already exists
@@ -163,7 +165,7 @@ public class MenuActivity extends AppCompatActivity {
                             }
 
                             if (!itemExists) {
-                                foodItems.add(new FoodItem(name, description, price, documentId, type));
+                                foodItems.add(new FoodItem(name, description, price, documentId, type, image));
                             }
                         }
                         menuAdapterWaiter.notifyDataSetChanged();
@@ -196,9 +198,10 @@ public class MenuActivity extends AppCompatActivity {
                                     String name = change.getDocument().getString("name");
                                     String description = change.getDocument().getString("description");
                                     Integer price = change.getDocument().getLong("price").intValue();
-                                    String type = change.getDocument().getString("type"); // Get the type field
+                                    String type = change.getDocument().getString("type");
+                                    String image = change.getDocument().getString("url");
 
-                                    FoodItem newFoodItem = new FoodItem(name, description, price, documentId, type);
+                                    FoodItem newFoodItem = new FoodItem(name, description, price, documentId, type, image);
                                     foodItems.add(newFoodItem);
 
                                     menuAdapterWaiter.notifyDataSetChanged();
@@ -212,9 +215,10 @@ public class MenuActivity extends AppCompatActivity {
                                         String modifiedName = change.getDocument().getString("name");
                                         String modifiedDescription = change.getDocument().getString("description");
                                         Integer modifiedPrice = change.getDocument().getLong("price").intValue();
-                                        String modifiedtype = change.getDocument().getString("type"); // Get the modified type field
+                                        String modifiedtype = change.getDocument().getString("type");
+                                        String modifiedImage = change.getDocument().getString("url");
 
-                                        FoodItem modifiedFoodItem = new FoodItem(modifiedName, modifiedDescription, modifiedPrice, documentId, modifiedtype);
+                                        FoodItem modifiedFoodItem = new FoodItem(modifiedName, modifiedDescription, modifiedPrice, documentId, modifiedtype, modifiedImage);
 
                                         // Replace the old item with the modified one
                                         foodItems.set(i, modifiedFoodItem);

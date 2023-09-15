@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.FoodItem;
 import com.example.hotel_management.recyledview.MenuAdapterAdmin;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,7 +48,7 @@ public class MenuFragment extends Fragment {
 
         //this lisnter is called when a food item is clicked on the menu. this will open a pop up window to edit the food item
         menuAdapterAdmin.setOnFoodItemListener(foodItem -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
             View dialogView = getLayoutInflater().inflate(R.layout.pop_up_menu_edit, null);
             TextView topic = dialogView.findViewById(R.id.foodEditTopic);
             topic.setText("Edit Food Item");
@@ -124,7 +125,7 @@ public class MenuFragment extends Fragment {
 
         //this will open a pop up window to add a new food item
         addButton.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
             View dialogView = getLayoutInflater().inflate(R.layout.pop_up_menu_edit, null);
             TextView topic = dialogView.findViewById(R.id.foodEditTopic);
             topic.setText("Add New Food Item");
@@ -158,7 +159,7 @@ public class MenuFragment extends Fragment {
                             Toast.makeText(getContext(), "Invalid price format", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        FoodItem foodItem = new FoodItem(name, description, price, "", type);
+                        FoodItem foodItem = new FoodItem(name, description, price, "", type,"https://i.ibb.co/wsv038X/Homemade-French-Fries-8.jpg");
 
                         db.collection("foods").add(foodItem).addOnSuccessListener(documentReference -> {
                             foodItem.setDocumentId(documentReference.getId());
@@ -185,6 +186,7 @@ public class MenuFragment extends Fragment {
                             String description = document.getString("description");
                             Integer price = document.getLong("price").intValue();
                             String type = document.getString("type");
+                            String image = document.getString("url");
                             String documentId = document.getId();
 
                             // Check if the item with the same document ID already exists
@@ -197,7 +199,7 @@ public class MenuFragment extends Fragment {
                             }
 
                             if (!itemExists) {
-                                foodItems.add(new FoodItem(name, description, price, documentId, type));
+                                foodItems.add(new FoodItem(name, description, price, documentId, type, image));
                             }
                         }
                         menuAdapterAdmin.notifyDataSetChanged();
@@ -230,9 +232,10 @@ public class MenuFragment extends Fragment {
                                     String name = change.getDocument().getString("name");
                                     String description = change.getDocument().getString("description");
                                     Integer price = change.getDocument().getLong("price").intValue();
-                                    String type = change.getDocument().getString("type"); // Get the type field
+                                    String type = change.getDocument().getString("type");
+                                    String image = change.getDocument().getString("url");
 
-                                    FoodItem newFoodItem = new FoodItem(name, description, price, documentId, type);
+                                    FoodItem newFoodItem = new FoodItem(name, description, price, documentId, type, image);
                                     foodItems.add(newFoodItem);
 
                                     menuAdapterAdmin.notifyDataSetChanged();
@@ -246,9 +249,10 @@ public class MenuFragment extends Fragment {
                                         String modifiedName = change.getDocument().getString("name");
                                         String modifiedDescription = change.getDocument().getString("description");
                                         Integer modifiedPrice = change.getDocument().getLong("price").intValue();
-                                        String modifiedtype = change.getDocument().getString("type"); // Get the modified type field
+                                        String modifiedtype = change.getDocument().getString("type");
+                                        String modifiedImage = change.getDocument().getString("url");
 
-                                        FoodItem modifiedFoodItem = new FoodItem(modifiedName, modifiedDescription, modifiedPrice, documentId, modifiedtype);
+                                        FoodItem modifiedFoodItem = new FoodItem(modifiedName, modifiedDescription, modifiedPrice, documentId, modifiedtype,modifiedImage);
 
                                         // Replace the old item with the modified one
                                         foodItems.set(i, modifiedFoodItem);

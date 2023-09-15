@@ -1,7 +1,6 @@
 package com.example.hotel_management.recyledview;
 
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 
 public class OrderListAdapterWaiter extends androidx.recyclerview.widget.RecyclerView.Adapter<OrderListAdapterWaiter.OrderItemViewHolder>{
     public ArrayList<OrderItem> orderItems;
-
+    public Picasso picasso;
     public OrderListAdapterWaiter(ArrayList<OrderItem> orderItems){
         this.orderItems = orderItems;
     }
@@ -29,6 +28,7 @@ public class OrderListAdapterWaiter extends androidx.recyclerview.widget.Recycle
     @Override
     public OrderItemViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
         android.view.View view = android.view.LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order_waiter, parent, false);
+        picasso = Picasso.get();
         return new OrderItemViewHolder(view);
     }
     @Override
@@ -36,13 +36,11 @@ public class OrderListAdapterWaiter extends androidx.recyclerview.widget.Recycle
         OrderItem orderItem = orderItems.get(position);
         holder.foodName.setText(orderItem.name);
         holder.quantity.setText(orderItem.quantity.toString());
-        String path ="https://i.ibb.co/m48NQyc/image-5.png";
-        Picasso.get().load(path).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
+        picasso.load(orderItem.image).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
         holder.status.setText(orderItem.status);
         holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.status)));
         holder.tableID.setText(orderItem.tableID.toString());
         holder.orderButton.setOnClickListener(v -> onOrderClickListener.OnOrderButtonClick(orderItem));
-        Log.d("heyyou", "onBindViewHolder: " + orderItem.status);
         if(orderItem.status.equals("Delivering")){
             holder.orderButton.setText("Delivered");
             holder.orderButton.setBackgroundColor(ContextCompat.getColor(holder.orderButton.getContext(), R.color.Success));
@@ -69,7 +67,7 @@ public class OrderListAdapterWaiter extends androidx.recyclerview.widget.Recycle
             foodName = itemView.findViewById(R.id.foodNameWaiter);
             foodImage = itemView.findViewById(R.id.foodImageAdmin);
             quantity = itemView.findViewById(R.id.orderQuantity);
-            orderButton = itemView.findViewById(R.id.orderButton);
+            orderButton = itemView.findViewById(R.id.orderButtonWaiter);
             tableID = itemView.findViewById(R.id.orderTableNumber);
             status = itemView.findViewById(R.id.status);
         }

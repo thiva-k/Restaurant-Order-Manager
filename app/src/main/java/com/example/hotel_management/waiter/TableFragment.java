@@ -22,10 +22,11 @@ import java.util.ArrayList;
 
 
 public class TableFragment extends Fragment {
-    RecyclerView recyclerView;
-    TableAdapter tableAdapter;
-    ArrayList<Table> tables;
-    FirebaseFirestore db;
+    private RecyclerView recyclerView;
+    private TableAdapter tableAdapter;
+    private ArrayList<Table> tables;
+    private FirebaseFirestore db;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
         db = FirebaseFirestore.getInstance();
@@ -36,13 +37,13 @@ public class TableFragment extends Fragment {
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(getContext(), 3));
         tableAdapter.setOnStartSessionListener(table -> {
             Intent intent = new Intent(getContext(), MenuActivity.class);
-            intent.putExtra("tableID", table.tableID);
+            intent.putExtra("tableID", table.getTableID());
             startActivity(intent);
         });
         tableAdapter.setOnEndSessionListener(table -> {
-                    table.status = "Available";
+                    table.setStatus("Available");
                     tableAdapter.notifyDataSetChanged();
-                    db.collection("tables").document(table.tableID.toString()).update("status", "Available").addOnSuccessListener(documentReference -> {
+                    db.collection("tables").document(table.getTableID().toString()).update("status", "Available").addOnSuccessListener(documentReference -> {
                         Log.d("FirestoreData", "status successfully updated!");
                     }).addOnFailureListener(e -> {
                         Log.d("FirestoreData", "Error updating status", e);

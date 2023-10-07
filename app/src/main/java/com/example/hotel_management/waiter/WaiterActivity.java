@@ -9,9 +9,10 @@ import com.example.hotel_management.R;
 import com.google.android.material.tabs.TabLayout;
 
 public class WaiterActivity extends AppCompatActivity {
-    TabLayout waiterTaskTabLayout;
-    ViewPager2 waiterTaskViewPager;
-    WaiterTaskAdapter waiterTaskAdapter;
+    private TabLayout waiterTaskTabLayout;
+    private ViewPager2 waiterTaskViewPager;
+    private WaiterTaskAdapter waiterTaskAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

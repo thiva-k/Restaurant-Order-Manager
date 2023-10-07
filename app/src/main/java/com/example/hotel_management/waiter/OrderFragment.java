@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 
 public class OrderFragment extends Fragment {
-    RecyclerView recyclerView;
-    OrderListAdapterWaiter orderListAdapterWaiter;
-    ArrayList<OrderItem> orderItems;
-    TextView noOrdersText;
-    FirebaseFirestore db;
+    private RecyclerView recyclerView;
+    private OrderListAdapterWaiter orderListAdapterWaiter;
+    private ArrayList<OrderItem> orderItems;
+    private TextView noOrdersText;
+    private FirebaseFirestore db;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
@@ -36,23 +36,23 @@ public class OrderFragment extends Fragment {
         orderItems = new ArrayList<>();
         orderListAdapterWaiter = new OrderListAdapterWaiter(orderItems);
         orderListAdapterWaiter.setOnOrderButtonClickListener(orderItem -> {
-            if(orderItem.status.equals("Prepared")){
-                orderItem.status = "Delivering";
+            if(orderItem.getStatus().equals("Prepared")){
+                orderItem.setStatus("Delivering");
                 orderItems.add(0, orderItem);
-                db.collection("orders").document(orderItem.orderID).update("status", "Delivering").addOnSuccessListener(documentReference -> {
+                db.collection("orders").document(orderItem.getOrderID()).update("status", "Delivering").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
                 });
             }
             else{
-                orderItem.status="Delivered";
+                orderItem.setStatus("Delivered");
                 orderItems.remove(orderItem);
                 if(orderItems.size()==0){
                     noOrdersText.setVisibility(View.VISIBLE);
                 }
                 orderListAdapterWaiter.notifyDataSetChanged();
-                db.collection("orders").document(orderItem.orderID).update("status", "Delivered").addOnSuccessListener(documentReference -> {
+                db.collection("orders").document(orderItem.getOrderID()).update("status", "Delivered").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
@@ -72,8 +72,8 @@ public class OrderFragment extends Fragment {
                 String notes = documentSnapshot.getString("notes");
                 String image = documentSnapshot.getString("url");
                 OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes ,image);
-                orderItem.status = "Prepared";
-                orderItem.orderID = documentSnapshot.getId();
+                orderItem.setStatus("Prepared");
+                orderItem.setOrderID(documentSnapshot.getId());
                 orderItems.add(orderItem);
             }
             if(orderItems.size()==0){
@@ -106,8 +106,8 @@ public class OrderFragment extends Fragment {
                             String notes = change.getDocument().getString("notes");
                             String image = change.getDocument().getString("url");
                             OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes, image);
-                            orderItem.status = "Prepared";
-                            orderItem.orderID = change.getDocument().getId();
+                            orderItem.setStatus("Prepared");
+                            orderItem.setOrderID(change.getDocument().getId());
                             orderItems.add(orderItem);
                             if(orderItems.size()!=0){
                                 noOrdersText.setVisibility(View.GONE);
@@ -121,7 +121,7 @@ public class OrderFragment extends Fragment {
                             //remove from the list
                             String id = change.getDocument().getId();
                             for (OrderItem item : orderItems) {
-                                if (item.orderID.equals(id)) {
+                                if (item.getOrderID().equals(id)) {
                                     orderItems.remove(item);
                                     if (orderItems.size() == 0) {
                                         noOrdersText.setVisibility(View.VISIBLE);
@@ -138,8 +138,8 @@ public class OrderFragment extends Fragment {
                             String notes = change.getDocument().getString("notes");
                             String image = change.getDocument().getString("url");
                             OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes, image);
-                            orderItem.status = "Prepared";
-                            orderItem.orderID = change.getDocument().getId();
+                            orderItem.setStatus("Prepared");
+                            orderItem.setOrderID(change.getDocument().getId());
                             orderItems.add(orderItem);
                             noOrdersText.setVisibility(View.GONE);
                             orderListAdapterWaiter.notifyDataSetChanged();

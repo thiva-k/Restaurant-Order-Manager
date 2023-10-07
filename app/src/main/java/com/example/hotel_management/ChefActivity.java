@@ -7,14 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.hotel_management.datatypes.OrderItem;
 import com.example.hotel_management.recyledview.OrderListAdapterChef;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -36,23 +34,23 @@ public class ChefActivity extends AppCompatActivity {
         orderItems = new ArrayList<>();
         orderListAdapterChef = new OrderListAdapterChef(orderItems);
         orderListAdapterChef.setOnOrderButtonClickListener(orderItem -> {
-            if(orderItem.status.equals("Ordered")){
-                orderItem.status = "Preparing";
+            if(orderItem.getStatus().equals("Ordered")){
+                orderItem.setStatus("Preparing");
                 orderItems.add(0, orderItem);
-                db.collection("orders").document(orderItem.orderID).update("status", "Preparing").addOnSuccessListener(documentReference -> {
+                db.collection("orders").document(orderItem.getOrderID()).update("status", "Preparing").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
                 });
             }
             else{
-                orderItem.status="Prepared";
+                orderItem.setStatus("Prepared");
                 orderItems.remove(orderItem);
                 if(orderItems.size()==0){
                     noOrdersText.setVisibility(View.VISIBLE);
                 }
                 orderListAdapterChef.notifyDataSetChanged();
-                db.collection("orders").document(orderItem.orderID).update("status", "Prepared").addOnSuccessListener(documentReference -> {
+                db.collection("orders").document(orderItem.getOrderID()).update("status", "Prepared").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
@@ -86,7 +84,7 @@ public class ChefActivity extends AppCompatActivity {
                             String notes = change.getDocument().getString("notes");
                             String image = change.getDocument().getString("url");
                             OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes, image);
-                            orderItem.orderID = change.getDocument().getId();
+                            orderItem.setOrderID(change.getDocument().getId());
                             orderItems.add(orderItem);
                             if(orderItems.size()!=0){
                                 noOrdersText.setVisibility(View.GONE);
@@ -100,7 +98,7 @@ public class ChefActivity extends AppCompatActivity {
                             //remove from the list
                             String id = change.getDocument().getId();
                             for (OrderItem item : orderItems) {
-                                if (item.orderID.equals(id)) {
+                                if (item.getOrderID().equals(id)) {
                                     orderItems.remove(item);
                                     if (orderItems.size() == 0) {
                                         noOrdersText.setVisibility(View.VISIBLE);

@@ -35,19 +35,19 @@ public class OrderListAdapterChef extends androidx.recyclerview.widget.RecyclerV
     @Override
     public void onBindViewHolder(OrderItemViewHolder holder, int position) {
         OrderItem orderItem = orderItems.get(position);
-        holder.foodName.setText(orderItem.name);
-        holder.quantity.setText(orderItem.quantity.toString());
-        picasso.load(orderItem.image).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
-        holder.status.setText(orderItem.status);
-        holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.status)));
-        holder.tableID.setText(orderItem.tableID.toString());
-        holder.notes.setText(orderItem.notes);
+        holder.foodName.setText(orderItem.getName());
+        holder.quantity.setText(orderItem.getQuantity().toString());
+        picasso.load(orderItem.getImage()).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
+        holder.status.setText(orderItem.getStatus());
+        holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.getStatus())));
+        holder.tableID.setText(orderItem.getTableID().toString());
+        holder.notes.setText(orderItem.getNotes());
         holder.orderButton.setOnClickListener(v -> onOrderClickListener.OnOrderButtonClick(orderItem));
-        if(orderItem.status.equals("Preparing")){
+        if(orderItem.getStatus().equals("Preparing")){
             holder.orderButton.setText("Prepared");
             holder.orderButton.setBackgroundColor(ContextCompat.getColor(holder.orderButton.getContext(), R.color.Success));
         }
-        else if(orderItem.status.equals("Ordered")){
+        else if(orderItem.getStatus().equals("Ordered")){
             holder.orderButton.setText("Pick Up");
             holder.orderButton.setBackgroundColor(ContextCompat.getColor(holder.orderButton.getContext(), R.color.Failure));
         }

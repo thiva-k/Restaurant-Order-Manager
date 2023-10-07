@@ -53,15 +53,15 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Table table = tables.get(position);
-        int color = ContextCompat.getColor(holder.itemView.getContext(), getColor(table.status));
+        int color = ContextCompat.getColor(holder.itemView.getContext(), getColor(table.getStatus()));
         holder.itemView.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.rounded_corner_outer));
-        holder.tableID.setText("Table "+table.tableID.toString());
-        holder.tableStatus.setText(table.status);
+        holder.tableID.setText("Table "+ table.getTableID().toString());
+        holder.tableStatus.setText(table.getStatus());
         holder.tableStatus.setTextColor(color);
         holder.viewDetailsButton.setOnClickListener(v -> {
             onTableDetailsListener.OnTableDetailsClick(table);
         });
-        switch(table.status){
+        switch(table.getStatus()){
             case "Available":
                 holder.startSessionButton.setVisibility(View.VISIBLE);
                 holder.startSessionButton.setOnClickListener(v -> onStartSessionListener.OnStartSessionClick(table));

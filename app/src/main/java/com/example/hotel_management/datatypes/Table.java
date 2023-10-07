@@ -1,13 +1,24 @@
 package com.example.hotel_management.datatypes;
 
 public class Table {
-    public Integer tableID;
-    public String status;
-    public String lastSessionID;
+    private Integer tableID;
+    private String status;
+    private String lastSessionID;
 
     public Table(Integer tableID, String status, String lastSessionID) {
         this.tableID = tableID;
         this.status = status;
         this.lastSessionID = lastSessionID;
+    }
+
+    public Integer getTableID() {
+        return tableID;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

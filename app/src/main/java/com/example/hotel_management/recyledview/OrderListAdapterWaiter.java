@@ -34,14 +34,14 @@ public class OrderListAdapterWaiter extends androidx.recyclerview.widget.Recycle
     @Override
     public void onBindViewHolder(OrderItemViewHolder holder, int position) {
         OrderItem orderItem = orderItems.get(position);
-        holder.foodName.setText(orderItem.name);
-        holder.quantity.setText(orderItem.quantity.toString());
-        picasso.load(orderItem.image).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
-        holder.status.setText(orderItem.status);
-        holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.status)));
-        holder.tableID.setText(orderItem.tableID.toString());
+        holder.foodName.setText(orderItem.getName());
+        holder.quantity.setText(orderItem.getQuantity().toString());
+        picasso.load(orderItem.getImage()).error(R.drawable.baseline_emoji_food_beverage_24).into(holder.foodImage);
+        holder.status.setText(orderItem.getStatus());
+        holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.getStatus())));
+        holder.tableID.setText(orderItem.getTableID().toString());
         holder.orderButton.setOnClickListener(v -> onOrderClickListener.OnOrderButtonClick(orderItem));
-        if(orderItem.status.equals("Delivering")){
+        if(orderItem.getStatus().equals("Delivering")){
             holder.orderButton.setText("Delivered");
             holder.orderButton.setBackgroundColor(ContextCompat.getColor(holder.orderButton.getContext(), R.color.Success));
         }

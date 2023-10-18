@@ -61,6 +61,18 @@ public class MenuActivity extends AppCompatActivity {
         orderRecyclerView.setAdapter(orderedListAdapter);
 
         // Session manager
+
+
+        addOrderCallback = (totalBill,orderItem) -> {
+            TextView beforeDiscount = findViewById(R.id.beforeDiscount);
+            TextView afterDiscount = findViewById(R.id.afterDiscount);
+            beforeDiscount.setText(totalBill.toString());
+            afterDiscount.setText(totalBill.toString());
+            orderedItems.add(orderItem);
+            orderedListAdapter.notifyItemInserted(orderedItems.size()-1);
+            Log.d("heyyou", "addOrderCallback: "+orderedItems.size());
+        };
+
         sessionManager = new SessionManager(tableID,addOrderCallback,orderedListAdapter);
 
         //this is to check if there is an ongoing session for the table
@@ -182,7 +194,6 @@ public class MenuActivity extends AppCompatActivity {
                                     }
                                 }
                                 break;
-
                             // Handle REMOVED case if needed
                         }
                     }

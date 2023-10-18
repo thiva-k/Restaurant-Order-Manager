@@ -3,6 +3,7 @@ package com.example.hotel_management.waiter;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.hotel_management.R;
 import com.example.hotel_management.datatypes.Table;
@@ -26,6 +28,7 @@ public class TableFragment extends Fragment {
     private TableAdapter tableAdapter;
     private ArrayList<Table> tables;
     private FirebaseFirestore db;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
@@ -61,6 +64,14 @@ public class TableFragment extends Fragment {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
             bottomSheetDialog.setContentView(R.layout.bottom_sheet_table_info);
             bottomSheetDialog.getBehavior().setMaxWidth(2000);
+            TextView noBookingsText = bottomSheetDialog.findViewById(R.id.noBookingText);
+            View divider = bottomSheetDialog.findViewById(R.id.divider);
+            ConstraintLayout bookingLayout = bottomSheetDialog.findViewById(R.id.bookingExpanded);
+            RecyclerView bookingRecyclerView = bottomSheetDialog.findViewById(R.id.tableBookingRecyclerView);
+            noBookingsText.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.GONE);
+            bookingLayout.setVisibility(View.GONE);
+            bookingRecyclerView.setVisibility(View.GONE);
             bottomSheetDialog.show();
         });
         db = FirebaseFirestore.getInstance();

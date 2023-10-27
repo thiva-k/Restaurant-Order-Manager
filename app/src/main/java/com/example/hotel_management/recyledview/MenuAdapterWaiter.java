@@ -57,7 +57,6 @@ public class MenuAdapterWaiter extends RecyclerView.Adapter<MenuAdapterWaiter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView foodName;
-        TextView foodDescription;
         TextView foodPrice;
         ImageView foodImage;
 

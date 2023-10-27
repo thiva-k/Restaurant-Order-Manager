@@ -40,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private void signInWithEmailPassword() {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-
+        if(email.isEmpty() || password.isEmpty()){
+            Toast.makeText(MainActivity.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {

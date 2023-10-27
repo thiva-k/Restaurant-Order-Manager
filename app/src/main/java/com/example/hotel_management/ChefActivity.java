@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,21 +36,25 @@ public class ChefActivity extends AppCompatActivity {
         orderListAdapterChef = new OrderListAdapterChef(orderItems);
         orderListAdapterChef.setOnOrderButtonClickListener(orderItem -> {
             if(orderItem.getStatus().equals("Ordered")){
-                orderItem.setStatus("Preparing");
-                orderItems.add(0, orderItem);
+                int index = orderItems.indexOf(orderItem);
                 db.collection("orders").document(orderItem.getOrderID()).update("status", "Preparing").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
+                    orderItem.setStatus("Preparing");
+                    orderItems.add(0, orderItem);
+                    orderListAdapterChef.notifyItemMoved(index, 0);
+                    orderListAdapterChef.notifyItemChanged(0);
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
                 });
             }
             else{
                 orderItem.setStatus("Prepared");
+                int index = orderItems.indexOf(orderItem);
                 orderItems.remove(orderItem);
                 if(orderItems.size()==0){
                     noOrdersText.setVisibility(View.VISIBLE);
                 }
-                orderListAdapterChef.notifyDataSetChanged();
+                orderListAdapterChef.notifyItemRemoved(index);
                 db.collection("orders").document(orderItem.getOrderID()).update("status", "Prepared").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
@@ -89,13 +94,16 @@ public class ChefActivity extends AppCompatActivity {
                             if(orderItems.size()!=0){
                                 noOrdersText.setVisibility(View.GONE);
                             }
-                            orderListAdapterChef.notifyDataSetChanged();
+                            else {
+                                noOrdersText.setVisibility(View.VISIBLE);
+                            }
                         }
                         break;
                     case MODIFIED:
                         String newStatus = change.getDocument().getString("status");
                         if (newStatus.equals("Preparing")) {
-                            //remove from the list
+                            //remove from the list if the status is changed to "Preparing"
+                            //because an another chef has taken that order
                             String id = change.getDocument().getId();
                             for (OrderItem item : orderItems) {
                                 if (item.getOrderID().equals(id)) {
@@ -103,12 +111,18 @@ public class ChefActivity extends AppCompatActivity {
                                     if (orderItems.size() == 0) {
                                         noOrdersText.setVisibility(View.VISIBLE);
                                     }
-                                    orderListAdapterChef.notifyDataSetChanged();
                                     break;
                                 }
                             }}
                 }
             }
         }));
+
+        //setup the profile button
+        findViewById(R.id.profileButton).setOnClickListener(view -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
     }
 }

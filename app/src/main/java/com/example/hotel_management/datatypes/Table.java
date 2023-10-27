@@ -21,4 +21,7 @@ public class Table {
     public void setStatus(String status) {
         this.status = status;
     }
+    public String getLastSessionID() {
+        return lastSessionID;
+    }
 }

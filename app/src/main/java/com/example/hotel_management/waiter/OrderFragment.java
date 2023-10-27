@@ -37,21 +37,25 @@ public class OrderFragment extends Fragment {
         orderListAdapterWaiter = new OrderListAdapterWaiter(orderItems);
         orderListAdapterWaiter.setOnOrderButtonClickListener(orderItem -> {
             if(orderItem.getStatus().equals("Prepared")){
-                orderItem.setStatus("Delivering");
-                orderItems.add(0, orderItem);
+                int index = orderItems.indexOf(orderItem);
                 db.collection("orders").document(orderItem.getOrderID()).update("status", "Delivering").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
+                    orderItem.setStatus("Delivering");
+                    orderItems.add(0, orderItem);
+                    orderListAdapterWaiter.notifyItemMoved(index, 0);
+                    orderListAdapterWaiter.notifyItemChanged(0);
                 }).addOnFailureListener(e -> {
                     Log.d("FirestoreData", "Error updating status", e);
                 });
             }
             else{
                 orderItem.setStatus("Delivered");
+                int index = orderItems.indexOf(orderItem);
                 orderItems.remove(orderItem);
                 if(orderItems.size()==0){
                     noOrdersText.setVisibility(View.VISIBLE);
                 }
-                orderListAdapterWaiter.notifyDataSetChanged();
+                orderListAdapterWaiter.notifyItemRemoved(index);
                 db.collection("orders").document(orderItem.getOrderID()).update("status", "Delivered").addOnSuccessListener(documentReference -> {
                     Log.d("FirestoreData", "status successfully updated!");
                 }).addOnFailureListener(e -> {
@@ -62,27 +66,6 @@ public class OrderFragment extends Fragment {
         recyclerView.setAdapter(orderListAdapterWaiter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        //fetching data from firestore
-        db.collection("orders").whereEqualTo("status", "Prepared").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                String name = documentSnapshot.getString("name");
-                Integer price = documentSnapshot.getLong("price").intValue();
-                Integer quantity = documentSnapshot.getLong("quantity").intValue();
-                Integer tableID = documentSnapshot.getLong("tableID").intValue();
-                String notes = documentSnapshot.getString("notes");
-                String image = documentSnapshot.getString("url");
-                OrderItem orderItem = new OrderItem(name, price, quantity, tableID, notes ,image);
-                orderItem.setStatus("Prepared");
-                orderItem.setOrderID(documentSnapshot.getId());
-                orderItems.add(orderItem);
-            }
-            if(orderItems.size()==0){
-                noOrdersText.setVisibility(View.VISIBLE);
-            }
-            orderListAdapterWaiter.notifyDataSetChanged();
-        }).addOnFailureListener(e -> {
-            Log.d("FirestoreData", "Error getting documents: ", e);
-        });
         //listen to real time changes in the database
         //if a new item is added then that will have the status "Prepared". so we need to add that to the list
         //if an item status changed from "Prepared" to "Delivering" then we need to remove that from the list
@@ -112,13 +95,15 @@ public class OrderFragment extends Fragment {
                             if(orderItems.size()!=0){
                                 noOrdersText.setVisibility(View.GONE);
                             }
-                            orderListAdapterWaiter.notifyDataSetChanged();
+                            else {
+                                noOrdersText.setVisibility(View.VISIBLE);
+                            }
                         }
                         break;
                     case MODIFIED:
                         String newStatus = change.getDocument().getString("status");
                         if (newStatus.equals("Delivering")) {
-                            //remove from the list
+                            //remove from the list because the a waiter has taken this order
                             String id = change.getDocument().getId();
                             for (OrderItem item : orderItems) {
                                 if (item.getOrderID().equals(id)) {
@@ -126,7 +111,6 @@ public class OrderFragment extends Fragment {
                                     if (orderItems.size() == 0) {
                                         noOrdersText.setVisibility(View.VISIBLE);
                                     }
-                                    orderListAdapterWaiter.notifyDataSetChanged();
                                     break;
                                 }
                             }}

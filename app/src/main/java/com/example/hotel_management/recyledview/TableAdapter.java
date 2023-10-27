@@ -20,7 +20,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     private OnTableDetailsListener onTableDetailsListener;
     private OnStartSessionListener onStartSessionListener;
     private OnCancelBookingListener onCancelBookingListener;
-    private OnEditSessionListener onEditSessionListener;
     private OnEndSessionListener onEndSessionListener;
 
     public interface OnTableDetailsListener {
@@ -31,9 +30,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     }
     public interface OnCancelBookingListener {
         void OnCancelBookingClick(Table table);
-    }
-    public interface OnEditSessionListener {
-        void OnEditSessionClick(Table table);
     }
     public interface OnEndSessionListener {
         void OnEndSessionClick(Table table);
@@ -73,7 +69,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
             case "Ongoing":
                 holder.editSessionButton.setVisibility(View.VISIBLE);
                 holder.editSessionButton.setOnClickListener(v -> {
-                    onEditSessionListener.OnEditSessionClick(table);
+                    onStartSessionListener.OnStartSessionClick(table);
                 });
                 holder.endSessionButton.setVisibility(View.VISIBLE);
                 holder.endSessionButton.setOnClickListener(v -> {
@@ -97,9 +93,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     }
     public void setOnCancelBookingListener(OnCancelBookingListener onCancelBookingListener) {
         this.onCancelBookingListener = onCancelBookingListener;
-    }
-    public void setOnEditSessionListener(OnEditSessionListener onEditSessionListener) {
-        this.onEditSessionListener = onEditSessionListener;
     }
     public void setOnEndSessionListener(OnEndSessionListener onEndSessionListener) {
         this.onEndSessionListener = onEndSessionListener;

@@ -67,7 +67,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OfferViewH
             super(itemView);
             offerDetailsTextView = itemView.findViewById(R.id.offerDetailsTextView);
             editOfferButton = itemView.findViewById(R.id.editOfferButton);
-            deleteOfferButton = itemView.findViewById(R.id.deleteOfferButton);
+            deleteOfferButton = itemView.findViewById(R.id.deleteEmployeeButton);
         }
     }
 }

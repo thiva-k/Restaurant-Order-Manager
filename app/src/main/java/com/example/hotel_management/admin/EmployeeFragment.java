@@ -36,10 +36,14 @@ public class EmployeeFragment extends Fragment {
     private FloatingActionButton addEmployeeButton;
     private EmployeeAdapter employeeAdapter;
     private ArrayList<Employee> employeeList;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_employee, container, false);
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         addEmployeeButton = view.findViewById(R.id.addEmployeeButton);
         addEmployeeButton.setOnClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
@@ -61,16 +65,14 @@ public class EmployeeFragment extends Fragment {
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 String selectedUserType = userTypeSpinner.getSelectedItem().toString();
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 String uid = task.getResult().getUser().getUid();
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 Map<String, Object> user = new HashMap<>();
                                 user.put("name", name);
                                 user.put("userType", selectedUserType);
                                 user.put("email", email); // Add the email attribute
-
                                 db.collection("users").document(uid)
                                         .set(user)
                                         .addOnSuccessListener(aVoid -> {
@@ -94,21 +96,32 @@ public class EmployeeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         employeeList = new ArrayList<>();
         employeeAdapter = new EmployeeAdapter(employeeList);
+        employeeAdapter.setOnEmployeeDeleteListener(employee -> {
+            db.collection("users").document(employee.getUserID()).delete().addOnSuccessListener(aVoid -> {
+                Log.d("EmployeeFragment", "Employee successfully deleted from Firestore");
+                Toast.makeText(getContext(), "Employee successfully deleted from Firestore", Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> {
+                Log.w("EmployeeFragment", "Error deleting employee from Firestore", e);
+                Toast.makeText(getContext(), "Error deleting employee from Firestore", Toast.LENGTH_SHORT).show();
+            });
+            employeeList.remove(employee);
+            employeeAdapter.notifyDataSetChanged();
+        });
         recyclerView.setAdapter(employeeAdapter);
         retrieveEmployees();
         return view;
     }
 
     private void retrieveEmployees() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String name = document.getString("name");
                     String email = document.getString("email"); // Retrieve email directly from Firestore
                     String userType = document.getString("userType");
-
-                    employeeList.add(new Employee(name, email, userType));
+                    String uid = document.getId();
+                    employeeList.add(new Employee(name, email, userType, uid));
                 }
                 employeeAdapter.notifyDataSetChanged();
             } else {

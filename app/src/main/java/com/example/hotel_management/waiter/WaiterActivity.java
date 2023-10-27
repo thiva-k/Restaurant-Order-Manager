@@ -3,8 +3,10 @@ package com.example.hotel_management.waiter;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.hotel_management.ProfileActivity;
 import com.example.hotel_management.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -42,6 +44,12 @@ public class WaiterActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 waiterTaskTabLayout.selectTab(waiterTaskTabLayout.getTabAt(position));
             }
+        });
+
+        //setup the profile button
+        findViewById(R.id.profileButton).setOnClickListener(view -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
         });
     }
 

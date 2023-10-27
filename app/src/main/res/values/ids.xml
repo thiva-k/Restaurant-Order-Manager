@@ -19,5 +19,5 @@
     <item name="viewOfferLayout" type="id" />
     <item name="offerDetailsTextView" type="id" />
     <item name="editOfferButton" type="id" />
-    <item name="deleteOfferButton" type="id" />
+    <item name="deleteEmployeeButton" type="id" />
 </resources>

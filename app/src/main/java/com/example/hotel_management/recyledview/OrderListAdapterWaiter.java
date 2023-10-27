@@ -40,12 +40,13 @@ public class OrderListAdapterWaiter extends androidx.recyclerview.widget.Recycle
         holder.status.setText(orderItem.getStatus());
         holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.getStatus())));
         holder.tableID.setText(orderItem.getTableID().toString());
-        holder.orderButton.setOnClickListener(v -> onOrderClickListener.OnOrderButtonClick(orderItem));
+        holder.orderButton.setOnClickListener(v ->
+                onOrderClickListener.OnOrderButtonClick(orderItem));
         if(orderItem.getStatus().equals("Delivering")){
             holder.orderButton.setText("Delivered");
             holder.orderButton.setBackgroundColor(ContextCompat.getColor(holder.orderButton.getContext(), R.color.Success));
         }
-        else{
+        else if(orderItem.getStatus().equals("Prepared")){
             holder.orderButton.setText("Pick Up");
             holder.orderButton.setBackgroundColor(ContextCompat.getColor(holder.orderButton.getContext(), R.color.Failure));
         }

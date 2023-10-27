@@ -42,7 +42,8 @@ public class OrderListAdapterChef extends androidx.recyclerview.widget.RecyclerV
         holder.status.setTextColor(ContextCompat.getColor(holder.status.getContext(), getColor(orderItem.getStatus())));
         holder.tableID.setText(orderItem.getTableID().toString());
         holder.notes.setText(orderItem.getNotes());
-        holder.orderButton.setOnClickListener(v -> onOrderClickListener.OnOrderButtonClick(orderItem));
+        holder.orderButton.setOnClickListener(v ->
+                onOrderClickListener.OnOrderButtonClick(orderItem));
         if(orderItem.getStatus().equals("Preparing")){
             holder.orderButton.setText("Prepared");
             holder.orderButton.setBackgroundColor(ContextCompat.getColor(holder.orderButton.getContext(), R.color.Success));

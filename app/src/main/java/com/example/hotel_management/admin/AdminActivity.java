@@ -3,8 +3,10 @@ package com.example.hotel_management.admin;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.hotel_management.ProfileActivity;
 import com.example.hotel_management.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -43,29 +45,11 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
-//        registerUserButton.setOnClickListener(view -> {
-//            Intent intent = new Intent(AdminActivity.this, RegisterEmployeeActivity.class);
-//            startActivity(intent);
-//        });
-//
-//        addMenuItemButton.setOnClickListener(view -> {
-//            Intent intent = new Intent(AdminActivity.this, EditMenuActivity.class);
-//            startActivity(intent);
-//        });
-//
-//        viewEmployeesButton.setOnClickListener(view -> { // Add this block
-//            Intent intent = new Intent(AdminActivity.this, ViewEmployeesActivity.class);
-//            startActivity(intent);
-//        });
-//
-//        addOfferButton.setOnClickListener(view -> { // Add this block
-//            Intent intent = new Intent(AdminActivity.this, AddOfferActivity.class);
-//            startActivity(intent);
-//        });
-//
-//        viewOffersButton.setOnClickListener(view -> { // Add this block
-//            Intent intent = new Intent(AdminActivity.this, ViewOfferActivity.class);
-//            startActivity(intent);
-//        });
+        //setup the profile button
+        findViewById(R.id.profileButton).setOnClickListener(view -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
     }
 }

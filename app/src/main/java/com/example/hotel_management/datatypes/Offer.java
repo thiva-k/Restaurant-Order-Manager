@@ -8,17 +8,16 @@ public class Offer {
     private String endDate;
     private int percentage;
     private String description;
+    private String offerID;
 
-    // Default constructor (required for Firestore)
-    public Offer() {
-    }
 
-    public Offer(String name, String startDate, String endDate, int percentage, String description) {
+    public Offer(String name, String startDate, String endDate, int percentage, String description, String offerID) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.percentage = percentage;
         this.description = description;
+        this.offerID = offerID;
     }
 
     // Getter and setter methods for each field
@@ -60,5 +59,8 @@ public class Offer {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    public String getOfferID() {
+        return offerID;
     }
 }

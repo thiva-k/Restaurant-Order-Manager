@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +41,12 @@ public class MenuActivity extends AppCompatActivity {
     private Integer tableID;
     private FirebaseFirestore db;
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish(); // Finish the current activity
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +68,6 @@ public class MenuActivity extends AppCompatActivity {
         orderRecyclerView.setAdapter(orderedListAdapter);
 
         // Session manager
-
 
         addOrderCallback = (totalBill,orderItem) -> {
             TextView beforeDiscount = findViewById(R.id.beforeDiscount);
@@ -89,7 +95,6 @@ public class MenuActivity extends AppCompatActivity {
                 if(!onGoingSession && change.getDocument().getLong("tableID").intValue()==tableID && change.getDocument().getBoolean("checkedOut").equals(false)){
                     if(change.getType() == DocumentChange.Type.ADDED){
                         Log.d("FirestoreData", "New session: " + change.getDocument().getData());
-                        sessionManager = new SessionManager(tableID,addOrderCallback,orderedListAdapter);
                         sessionManager.firebaseDownload(change.getDocument().getId());
                         onGoingSession = true;
                     }
@@ -102,8 +107,25 @@ public class MenuActivity extends AppCompatActivity {
         menuAdapterWaiter = new MenuAdapterWaiter(foodItems);
         menuAdapterWaiter.setOnFoodItemListener(this::OnFoodItemClick);
         foodRecyclerView.setAdapter(menuAdapterWaiter);
-
         fetchFoodData();
+
+        //checkout button
+        Button checkoutButton = findViewById(R.id.checkOutButton);
+        checkoutButton.setOnClickListener(view ->{
+            if(!onGoingSession){
+                Toast.makeText(this, "No orders to checkout", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            sessionManager.checkOut();
+            onGoingSession = false;
+            sessionManager = new SessionManager(tableID,addOrderCallback,orderedListAdapter);
+            orderedItems.clear();
+            orderedListAdapter.notifyDataSetChanged();
+            TextView beforeDiscount = findViewById(R.id.beforeDiscount);
+            TextView afterDiscount = findViewById(R.id.afterDiscount);
+            beforeDiscount.setText("0");
+            afterDiscount.setText("0");
+        });
 
     }
 
@@ -220,15 +242,14 @@ public class MenuActivity extends AppCompatActivity {
             OrderItem orderItem = new OrderItem(foodItem.getName(), foodItem.getPrice(), quantityValue, tableID ,note ,foodItem.getImage());
 
             //this callback is used to get the order id from the orderitem class and add it to the session.
-            onGoingSession = true;
             orderItem.setCallback(orderId -> {
-                sessionManager.addOrder(orderItem);
+                onGoingSession = true;
                 TextView beforeDiscount = findViewById(R.id.beforeDiscount);
                 TextView afterDiscount = findViewById(R.id.afterDiscount);
                 beforeDiscount.setText(sessionManager.getTotalBill().toString());
                 afterDiscount.setText(sessionManager.getTotalBill().toString());
             });
-            orderItem.firebaseUpload();
+            sessionManager.addOrder(orderItem);
             dialog.dismiss();
         });
         dialog.show();

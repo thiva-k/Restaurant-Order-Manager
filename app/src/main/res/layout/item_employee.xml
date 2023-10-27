@@ -45,28 +45,15 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/editOfferButton"
-                android:layout_width="0dp"
+                android:id="@+id/deleteEmployeeButton"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/LightAccent"
-                android:text="Edit"
+                android:text="Remove Employee"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:cornerRadius="10dp" />
 
-            <Space
-                android:layout_width="16dp"
-                android:layout_height="match_parent" />
-
-            <Button
-                android:id="@+id/deleteOfferButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/LightAccent"
-                android:text="Delete"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:cornerRadius="10dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
